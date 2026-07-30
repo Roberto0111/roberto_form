@@ -75,9 +75,9 @@ export default function Home() {
   return (
     <main>
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="FORM24 首頁">
-          <span className="brand-mark">F24</span>
-          <span>FORM<span className="brand-light">24</span></span>
+        <a className="brand" href="#top" aria-label="ROBERT FORM 首頁">
+          <span className="brand-mark">RF</span>
+          <span>ROBERT <span className="brand-light">FORM</span></span>
         </a>
         <nav aria-label="主要導覽">
           <a href="#catalog">選品目錄</a>
@@ -189,7 +189,7 @@ export default function Home() {
       </section>
 
       <footer id="contact">
-        <div><span className="brand-mark">F24</span><strong>FORM24</strong></div>
+        <div><span className="brand-mark">RF</span><strong>ROBERT FORM</strong></div>
         <p>你的想法，值得被做出來。</p>
         <a href="mailto:hello@example.com">hello@example.com ↗</a>
         <small>Prototype catalogue · Source images linked to MakerWorld</small>
