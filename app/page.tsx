@@ -7,6 +7,7 @@ type Product = {
   zh: string;
   category: "燈具" | "飾品" | "酒具" | "家居" | "植栽" | "收納";
   image: string;
+  lifestyle?: string;
   source: string;
   tag: string;
 };
@@ -14,7 +15,7 @@ type Product = {
 const products: Product[] = [
   { name: "Large Illuminated Lunar Wall Lamp", zh: "月球發光壁燈", category: "燈具", image: "/products/lamp-01.webp", source: "https://makerworld.com/zh/models/2320985-large-illuminated-lunar-wall-lamp-version-2", tag: "氛圍照明" },
   { name: "Moon Lamp with Wavy Stand", zh: "波浪底座月球燈", category: "燈具", image: "/products/lamp-02.webp", source: "https://makerworld.com/zh/models/1266343-moon-lamp-with-wavy-stand-fuzzy-skin", tag: "桌上燈" },
-  { name: "Lush Leaf Lamp", zh: "繁葉造型燈", category: "燈具", image: "/products/lamp-03.webp", source: "https://makerworld.com/zh/models/1913623-lush-leaf-lamp-pendant-or-standing", tag: "吊燈／立燈" },
+  { name: "Lush Leaf Lamp", zh: "繁葉造型燈", category: "燈具", image: "/products/lamp-03.webp", lifestyle: "/lifestyle/lamp-leaf-scenes.png", source: "https://makerworld.com/zh/models/1913623-lush-leaf-lamp-pendant-or-standing", tag: "吊燈／立燈" },
   { name: "Wavy Lamp E27", zh: "波浪 E27 燈", category: "燈具", image: "/products/lamp-04.webp", source: "https://makerworld.com/zh/models/965182-wavy-lamp-e27-e26-base-petg", tag: "現代風格" },
   { name: "Super Fast Print Lamp", zh: "極速列印桌燈", category: "燈具", image: "/products/lamp-05.webp", source: "https://makerworld.com/zh/models/2175648-led-kit-001-super-fast-print-lamp-55-mins-30g", tag: "輕量設計" },
   { name: "Wavy Ambient Lamp", zh: "流線氛圍燈", category: "燈具", image: "/products/lamp-06.webp", source: "https://makerworld.com/zh/models/965182-wavy-lamp-e27-e26-base-petg", tag: "空間佈置" },
@@ -23,11 +24,11 @@ const products: Product[] = [
   { name: "Big Letter Beads", zh: "大型字母串珠", category: "飾品", image: "/products/jewelry-03.webp", source: "https://makerworld.com/zh/models/2504346-big-letter-beads-5-inches", tag: "個人化" },
   { name: "Kumihimo Bracelet", zh: "組紐編織手環", category: "飾品", image: "/products/jewelry-04.webp", source: "https://makerworld.com/zh/models/1391285-kumihimo-bracelet-8-strings", tag: "手環" },
   { name: "Custom Letter Beads", zh: "自訂字母珠", category: "飾品", image: "/products/jewelry-05.webp", source: "https://makerworld.com/zh/models/2587491-customizable-letter-beads-letter-beads", tag: "客製禮物" },
-  { name: "Arboréa Jewelry Tree", zh: "Arboréa 首飾樹", category: "飾品", image: "/products/jewelry-06.webp", source: "https://makerworld.com/zh/models/1391601-arborea-modern-jewelry-tree", tag: "展示設計" },
+  { name: "Arboréa Jewelry Tree", zh: "Arboréa 首飾樹", category: "飾品", image: "/products/jewelry-06.webp", lifestyle: "/lifestyle/jewelry-tree-scenes.png", source: "https://makerworld.com/zh/models/1391601-arborea-modern-jewelry-tree", tag: "展示設計" },
   { name: "Single-Hand Cap Shooter", zh: "單手瓶蓋發射開瓶器", category: "酒具", image: "/products/bar-01.webp", source: "https://makerworld.com/zh/models/2777068-single-hand-bottle-cap-shooter", tag: "派對小物" },
   { name: "Glass Beer Bottle Opener", zh: "玻璃瓶啤酒開瓶器", category: "酒具", image: "/products/bar-02.webp", source: "https://makerworld.com/zh/models/2764241-glass-beer-bottle-opener", tag: "開瓶器" },
   { name: "Bottle Opener & Cap Gun", zh: "開瓶器與瓶蓋槍", category: "酒具", image: "/products/bar-03.webp", source: "https://makerworld.com/zh/models/2128043-bottle-opener-and-cap-gun", tag: "趣味設計" },
-  { name: "BeerCounter V5", zh: "啤酒計數開瓶器", category: "酒具", image: "/products/bar-04.webp", source: "https://makerworld.com/zh/models/89566-beercounter-v5-bottle-opener", tag: "聚會神器" },
+  { name: "BeerCounter V5", zh: "啤酒計數開瓶器", category: "酒具", image: "/products/bar-04.webp", lifestyle: "/lifestyle/beer-counter-scenes.png", source: "https://makerworld.com/zh/models/89566-beercounter-v5-bottle-opener", tag: "聚會神器" },
   { name: "2-in-1 Opener Keychain", zh: "二合一開瓶鑰匙圈", category: "酒具", image: "/products/bar-05.webp", source: "https://makerworld.com/zh/models/1246368-2-in-1-bottle-and-can-opener-keychain-gadget", tag: "隨身工具" },
   { name: "Beer Cap Launcher", zh: "啤酒瓶蓋發射器", category: "酒具", image: "/products/bar-06.webp", source: "https://makerworld.com/zh/models/2822922-beer-cap-launcher", tag: "派對玩具" },
   { name: "Entryway Organizer", zh: "玄關置物與鑰匙架", category: "家居", image: "/products/decor-01.webp", source: "https://makerworld.com/zh/models/2699152-modern-entryway-organizer-shelf-with-key-hooks-q_c", tag: "玄關收納" },
@@ -36,7 +37,7 @@ const products: Product[] = [
   { name: "Melting Wall Shelf", zh: "融化感造型壁架", category: "家居", image: "/products/decor-04.webp", source: "https://makerworld.com/zh/models/2211015-melting-wall-shelf-dripping-modern-shelf", tag: "牆面收納" },
   { name: "Hexagon Twisty Object", zh: "六角扭轉桌面擺件", category: "家居", image: "/products/decor-05.webp", source: "https://makerworld.com/zh/models/2738294-hexagon-twisty-fidget-toy", tag: "互動擺件" },
   { name: "Minimal Decorative Tray", zh: "極簡居家托盤", category: "家居", image: "/products/decor-06.webp", source: "https://makerworld.com/zh/models/2350771-decorative-tray-home", tag: "日常收納" },
-  { name: "Modern Japandi Ribbed Plant Pot", zh: "日系侘寂條紋植栽盆", category: "植栽", image: "/products/planter-01.webp", source: "https://makerworld.com/zh/models/2414690-modern-japandi-ribbed-plant-pot-with-drainage", tag: "排水花盆" },
+  { name: "Modern Japandi Ribbed Plant Pot", zh: "日系侘寂條紋植栽盆", category: "植栽", image: "/products/planter-01.webp", lifestyle: "/lifestyle/planter-scenes.png", source: "https://makerworld.com/zh/models/2414690-modern-japandi-ribbed-plant-pot-with-drainage", tag: "排水花盆" },
   { name: "The Claudia Planter", zh: "Claudia 雕塑植栽盆", category: "植栽", image: "/products/planter-02.webp", source: "https://makerworld.com/zh/models/1399976-the-claudia-planter-a-botany-chic-creation-decor", tag: "造型花器" },
   { name: "Mid Century Planter", zh: "世紀中期植栽盆", category: "植栽", image: "/products/planter-03.webp", source: "https://makerworld.com/zh/models/1616690-mid-century-planter-with-built-in-drip-tray", tag: "內建滴水盤" },
   { name: "HydroSquare Rain Planter", zh: "水循環方形植栽燈", category: "植栽", image: "/products/planter-04.webp", source: "https://makerworld.com/zh/models/2421936-led-kit-001-hydrosquare-rain-planter", tag: "植栽照明" },
@@ -59,6 +60,7 @@ const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "�
 export default function Home() {
   const [active, setActive] = useState<(typeof filters)[number]>("全部");
   const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState<Product | null>(null);
 
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -119,7 +121,7 @@ export default function Home() {
             <p className="eyebrow">THE CATALOGUE / 01</p>
             <h2>尋找你的下一件作品</h2>
           </div>
-          <p>目前展示的是設計靈感與可訂製方向。點進來源頁即可查看原始作品、創作者與授權說明。</p>
+          <p>挑選喜歡的商品，點開即可查看使用方式、空間搭配與可訂製方向，全程留在站內瀏覽。</p>
         </div>
 
         <div className="catalog-tools">
@@ -148,11 +150,16 @@ export default function Home() {
         <div className="product-grid">
           {shown.map((product, index) => (
             <article className="product-card" key={`${product.name}-${index}`}>
-              <a href={product.source} target="_blank" rel="noreferrer" className="product-image">
+              <button
+                type="button"
+                className="product-image"
+                onClick={() => setSelected(product)}
+                aria-label={`查看 ${product.zh} 的使用情境`}
+              >
                 <img src={product.image} alt={product.zh} loading="lazy" />
-                <span className="view-source">查看原作 ↗</span>
+                <span className="view-source">查看使用情境 ↗</span>
                 <span className="index">{String(index + 1).padStart(2, "0")}</span>
-              </a>
+              </button>
               <div className="product-meta">
                 <div>
                   <p>{product.category} · {product.tag}</p>
@@ -166,6 +173,46 @@ export default function Home() {
         </div>
         {shown.length === 0 && <p className="empty">找不到符合條件的作品，換個關鍵字試試看。</p>}
       </section>
+
+      {selected && (
+        <div className="product-modal" role="dialog" aria-modal="true" aria-label={`${selected.zh} 商品介紹`}>
+          <button className="modal-backdrop" onClick={() => setSelected(null)} aria-label="關閉商品介紹" />
+          <article className="modal-panel">
+            <button className="modal-close" onClick={() => setSelected(null)} aria-label="關閉">×</button>
+            <div className="modal-heading">
+              <div>
+                <p className="eyebrow">{selected.category} · {selected.tag}</p>
+                <h2>{selected.zh}</h2>
+                <span>{selected.name}</span>
+              </div>
+              <span className="custom-badge">可洽詢顏色與尺寸</span>
+            </div>
+            <div className="modal-gallery">
+              <figure className="modal-main-image"><img src={selected.image} alt={`${selected.zh} 商品照`} /></figure>
+              {selected.lifestyle ? (
+                <figure className="modal-lifestyle">
+                  <img src={selected.lifestyle} alt={`${selected.zh} 的三種使用與空間搭配情境`} />
+                </figure>
+              ) : (
+                <div className="styling-placeholder">
+                  <span>ROBERT FORM · STYLING NOTE</span>
+                  <h3>把它放進你的生活</h3>
+                  <p>適合玄關、書桌、餐廚或送禮情境。可依空間調整色彩、尺寸與表面質感。</p>
+                  <div className="swatches" aria-label="建議配色">
+                    <i className="swatch ivory" /><i className="swatch olive" /><i className="swatch clay" /><i className="swatch ink" />
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="use-grid">
+              <div><span>01</span><h3>怎麼使用</h3><p>作為日常實用品，也能成為空間中的視覺焦點。</p></div>
+              <div><span>02</span><h3>怎麼搭配</h3><p>搭配木質、石材與低彩度家具，能凸顯 3D 列印紋理。</p></div>
+              <div><span>03</span><h3>怎麼訂製</h3><p>可洽詢色彩、尺寸與局部細節；正式製作前會先確認可用授權。</p></div>
+            </div>
+            <a className="modal-cta" href="#contact" onClick={() => setSelected(null)}>詢問這件商品 →</a>
+          </article>
+        </div>
+      )}
 
       <section className="process" id="process">
         <div>
@@ -192,7 +239,7 @@ export default function Home() {
         <div><span className="brand-mark">RF</span><strong>ROBERT FORM</strong></div>
         <p>你的想法，值得被做出來。</p>
         <a href="mailto:hello@example.com">hello@example.com ↗</a>
-        <small>Prototype catalogue · Source images linked to MakerWorld</small>
+        <small>Curated 3D design inspiration · Licensing checked before production</small>
       </footer>
     </main>
   );
