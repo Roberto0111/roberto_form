@@ -1,0 +1,183 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+type Product = {
+  name: string;
+  zh: string;
+  category: "燈具" | "飾品" | "酒具" | "家居";
+  image: string;
+  source: string;
+  tag: string;
+};
+
+const products: Product[] = [
+  { name: "Large Illuminated Lunar Wall Lamp", zh: "月球發光壁燈", category: "燈具", image: "/products/lamp-01.webp", source: "https://makerworld.com/zh/models/2320985-large-illuminated-lunar-wall-lamp-version-2", tag: "氛圍照明" },
+  { name: "Moon Lamp with Wavy Stand", zh: "波浪底座月球燈", category: "燈具", image: "/products/lamp-02.webp", source: "https://makerworld.com/zh/models/1266343-moon-lamp-with-wavy-stand-fuzzy-skin", tag: "桌上燈" },
+  { name: "Lush Leaf Lamp", zh: "繁葉造型燈", category: "燈具", image: "/products/lamp-03.webp", source: "https://makerworld.com/zh/models/1913623-lush-leaf-lamp-pendant-or-standing", tag: "吊燈／立燈" },
+  { name: "Wavy Lamp E27", zh: "波浪 E27 燈", category: "燈具", image: "/products/lamp-04.webp", source: "https://makerworld.com/zh/models/965182-wavy-lamp-e27-e26-base-petg", tag: "現代風格" },
+  { name: "Super Fast Print Lamp", zh: "極速列印桌燈", category: "燈具", image: "/products/lamp-05.webp", source: "https://makerworld.com/zh/models/2175648-led-kit-001-super-fast-print-lamp-55-mins-30g", tag: "輕量設計" },
+  { name: "Wavy Ambient Lamp", zh: "流線氛圍燈", category: "燈具", image: "/products/lamp-06.webp", source: "https://makerworld.com/zh/models/965182-wavy-lamp-e27-e26-base-petg", tag: "空間佈置" },
+  { name: "Jewelry Organizer Stand", zh: "首飾展示收納架", category: "飾品", image: "/products/jewelry-01.webp", source: "https://makerworld.com/zh/models/757412-jewelry-organizer-necklace-bracelet-ring-stand", tag: "項鍊／戒指" },
+  { name: "Sculptural Jewelry Organizer", zh: "雕塑感首飾架", category: "飾品", image: "/products/jewelry-02.webp", source: "https://makerworld.com/zh/models/1092762-jewelry-organizer", tag: "桌面收納" },
+  { name: "Big Letter Beads", zh: "大型字母串珠", category: "飾品", image: "/products/jewelry-03.webp", source: "https://makerworld.com/zh/models/2504346-big-letter-beads-5-inches", tag: "個人化" },
+  { name: "Kumihimo Bracelet", zh: "組紐編織手環", category: "飾品", image: "/products/jewelry-04.webp", source: "https://makerworld.com/zh/models/1391285-kumihimo-bracelet-8-strings", tag: "手環" },
+  { name: "Custom Letter Beads", zh: "自訂字母珠", category: "飾品", image: "/products/jewelry-05.webp", source: "https://makerworld.com/zh/models/2587491-customizable-letter-beads-letter-beads", tag: "客製禮物" },
+  { name: "Arboréa Jewelry Tree", zh: "Arboréa 首飾樹", category: "飾品", image: "/products/jewelry-06.webp", source: "https://makerworld.com/zh/models/1391601-arborea-modern-jewelry-tree", tag: "展示設計" },
+  { name: "Single-Hand Cap Shooter", zh: "單手瓶蓋發射開瓶器", category: "酒具", image: "/products/bar-01.webp", source: "https://makerworld.com/zh/models/2777068-single-hand-bottle-cap-shooter", tag: "派對小物" },
+  { name: "Glass Beer Bottle Opener", zh: "玻璃瓶啤酒開瓶器", category: "酒具", image: "/products/bar-02.webp", source: "https://makerworld.com/zh/models/2764241-glass-beer-bottle-opener", tag: "開瓶器" },
+  { name: "Bottle Opener & Cap Gun", zh: "開瓶器與瓶蓋槍", category: "酒具", image: "/products/bar-03.webp", source: "https://makerworld.com/zh/models/2128043-bottle-opener-and-cap-gun", tag: "趣味設計" },
+  { name: "BeerCounter V5", zh: "啤酒計數開瓶器", category: "酒具", image: "/products/bar-04.webp", source: "https://makerworld.com/zh/models/89566-beercounter-v5-bottle-opener", tag: "聚會神器" },
+  { name: "2-in-1 Opener Keychain", zh: "二合一開瓶鑰匙圈", category: "酒具", image: "/products/bar-05.webp", source: "https://makerworld.com/zh/models/1246368-2-in-1-bottle-and-can-opener-keychain-gadget", tag: "隨身工具" },
+  { name: "Beer Cap Launcher", zh: "啤酒瓶蓋發射器", category: "酒具", image: "/products/bar-06.webp", source: "https://makerworld.com/zh/models/2822922-beer-cap-launcher", tag: "派對玩具" },
+  { name: "Entryway Organizer", zh: "玄關置物與鑰匙架", category: "家居", image: "/products/decor-01.webp", source: "https://makerworld.com/zh/models/2699152-modern-entryway-organizer-shelf-with-key-hooks-q_c", tag: "玄關收納" },
+  { name: "The High Voyager", zh: "太空旅人香座", category: "家居", image: "/products/decor-02.webp", source: "https://makerworld.com/zh/models/2771297-the-high-voyager-incense-holder", tag: "香氛擺件" },
+  { name: "Decorative HOME Tray", zh: "HOME 裝飾托盤", category: "家居", image: "/products/decor-03.webp", source: "https://makerworld.com/zh/models/2350771-decorative-tray-home", tag: "桌面選物" },
+  { name: "Melting Wall Shelf", zh: "融化感造型壁架", category: "家居", image: "/products/decor-04.webp", source: "https://makerworld.com/zh/models/2211015-melting-wall-shelf-dripping-modern-shelf", tag: "牆面收納" },
+  { name: "Hexagon Twisty Object", zh: "六角扭轉桌面擺件", category: "家居", image: "/products/decor-05.webp", source: "https://makerworld.com/zh/models/2738294-hexagon-twisty-fidget-toy", tag: "互動擺件" },
+  { name: "Minimal Decorative Tray", zh: "極簡居家托盤", category: "家居", image: "/products/decor-06.webp", source: "https://makerworld.com/zh/models/2350771-decorative-tray-home", tag: "日常收納" },
+];
+
+const filters = ["全部", "燈具", "飾品", "酒具", "家居"] as const;
+
+export default function Home() {
+  const [active, setActive] = useState<(typeof filters)[number]>("全部");
+  const [query, setQuery] = useState("");
+
+  const shown = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return products.filter(
+      (product) =>
+        (active === "全部" || product.category === active) &&
+        (!q ||
+          `${product.name} ${product.zh} ${product.tag} ${product.category}`
+            .toLowerCase()
+            .includes(q)),
+    );
+  }, [active, query]);
+
+  return (
+    <main>
+      <header className="site-header">
+        <a className="brand" href="#top" aria-label="FORM24 首頁">
+          <span className="brand-mark">F24</span>
+          <span>FORM<span className="brand-light">24</span></span>
+        </a>
+        <nav aria-label="主要導覽">
+          <a href="#catalog">選品目錄</a>
+          <a href="#process">訂製流程</a>
+          <a href="#about">關於作品</a>
+        </nav>
+        <a className="header-cta" href="#contact">洽詢訂製</a>
+      </header>
+
+      <section className="hero" id="top">
+        <div className="hero-copy">
+          <p className="eyebrow">3D PRINTED OBJECTS · CURATED DAILY</p>
+          <h1>把想像，<br />印成生活的形狀。</h1>
+          <p className="hero-intro">
+            從燈光、飾品到派對酒具，探索適合空間與日常的 3D 列印設計。
+            選一個喜歡的方向，我們再一起調整顏色、尺寸與細節。
+          </p>
+          <div className="hero-actions">
+            <a className="primary-button" href="#catalog">瀏覽 24 件選品 <span>↘</span></a>
+            <a className="text-button" href="#process">了解訂製方式 →</a>
+          </div>
+          <div className="hero-stats" aria-label="目錄資訊">
+            <div><strong>24</strong><span>精選設計</span></div>
+            <div><strong>4</strong><span>生活系列</span></div>
+            <div><strong>∞</strong><span>客製可能</span></div>
+          </div>
+        </div>
+        <div className="hero-collage" aria-label="精選作品">
+          <figure className="hero-main"><img src="/products/lamp-03.webp" alt="繁葉造型燈" /></figure>
+          <figure className="hero-small top"><img src="/products/jewelry-06.webp" alt="首飾樹" /></figure>
+          <figure className="hero-small bottom"><img src="/products/bar-04.webp" alt="啤酒計數開瓶器" /></figure>
+          <span className="orbit-label">FORM · FUNCTION · PLAY ·</span>
+        </div>
+      </section>
+
+      <section className="catalog-section" id="catalog">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">THE CATALOGUE / 01</p>
+            <h2>尋找你的下一件作品</h2>
+          </div>
+          <p>目前展示的是設計靈感與可訂製方向。點進來源頁即可查看原始作品、創作者與授權說明。</p>
+        </div>
+
+        <div className="catalog-tools">
+          <div className="filters" role="group" aria-label="商品分類">
+            {filters.map((filter) => (
+              <button
+                key={filter}
+                className={active === filter ? "active" : ""}
+                onClick={() => setActive(filter)}
+                aria-pressed={active === filter}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+          <label className="search">
+            <span>搜尋</span>
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="燈、收納、開瓶器…"
+            />
+          </label>
+        </div>
+
+        <div className="product-grid">
+          {shown.map((product, index) => (
+            <article className="product-card" key={`${product.name}-${index}`}>
+              <a href={product.source} target="_blank" rel="noreferrer" className="product-image">
+                <img src={product.image} alt={product.zh} loading="lazy" />
+                <span className="view-source">查看原作 ↗</span>
+                <span className="index">{String(index + 1).padStart(2, "0")}</span>
+              </a>
+              <div className="product-meta">
+                <div>
+                  <p>{product.category} · {product.tag}</p>
+                  <h3>{product.zh}</h3>
+                  <span>{product.name}</span>
+                </div>
+                <span className="custom-badge">可洽詢訂製</span>
+              </div>
+            </article>
+          ))}
+        </div>
+        {shown.length === 0 && <p className="empty">找不到符合條件的作品，換個關鍵字試試看。</p>}
+      </section>
+
+      <section className="process" id="process">
+        <div>
+          <p className="eyebrow">MADE FOR YOU / 02</p>
+          <h2>從喜歡，走到專屬。</h2>
+        </div>
+        <ol>
+          <li><span>01</span><h3>挑選方向</h3><p>從目錄找到喜歡的風格、用途或結構。</p></li>
+          <li><span>02</span><h3>確認授權</h3><p>先確認原作授權，再討論顏色、尺寸與調整範圍。</p></li>
+          <li><span>03</span><h3>打樣製作</h3><p>確認材料與細節，完成試印後再進入正式製作。</p></li>
+        </ol>
+      </section>
+
+      <section className="about" id="about">
+        <p className="eyebrow">A RESPONSIBLE CATALOGUE</p>
+        <h2>尊重每一個<br />被創造的形狀。</h2>
+        <p>
+          本站圖片整理自 MakerWorld 公開作品頁，作為選品靈感與訂製討論使用；
+          各作品權利屬於原創作者。商業製作前，我們會逐件確認授權，不直接轉售未獲許可的模型。
+        </p>
+      </section>
+
+      <footer id="contact">
+        <div><span className="brand-mark">F24</span><strong>FORM24</strong></div>
+        <p>你的想法，值得被做出來。</p>
+        <a href="mailto:hello@example.com">hello@example.com ↗</a>
+        <small>Prototype catalogue · Source images linked to MakerWorld</small>
+      </footer>
+    </main>
+  );
+}
