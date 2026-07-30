@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 type Product = {
   name: string;
   zh: string;
-  category: "燈具" | "飾品" | "酒具" | "家居" | "植栽" | "收納";
+  category: "燈具" | "飾品" | "酒具" | "家居" | "植栽" | "收納" | "廚房" | "寵物";
   image: string;
   lifestyle?: string;
   source: string;
@@ -53,9 +53,29 @@ const products: Product[] = [
   { name: "Hollow Storage Basket", zh: "鏤空堆疊收納籃", category: "收納", image: "/products/storage-06.webp", source: "https://makerworld.com/zh/models/2583249-exquisite-and-high-end-sturdy-and-practical-stacka", tag: "居家收納" },
   { name: "Post-It Note Holder", zh: "便利貼與模板收納座", category: "收納", image: "/products/storage-07.webp", source: "https://makerworld.com/zh/models/931302-holder-for-post-it-notes-stencils-included", tag: "文具收納" },
   { name: "Under-Shelf Organizer", zh: "層板下方小型收納盒", category: "收納", image: "/products/storage-08.webp", source: "https://makerworld.com/zh/models/1962101-under-shelf-organizer-small-version", tag: "空間利用" },
+  { name: "Monstera Leaf Coaster Set", zh: "龜背芋杯墊組", category: "廚房", image: "/products/kitchen-01.webp", source: "https://makerworld.com/zh/models/1658083-monstera-leaf-coaster-set-with-holder", tag: "餐桌佈置" },
+  { name: "HydroBowl Produce Washer", zh: "蔬果瀝水清洗碗", category: "廚房", image: "/products/kitchen-02.webp", source: "https://makerworld.com/zh/models/1507073-hydrobowl-smart-fruit-veggie-washer", tag: "料理工具" },
+  { name: "Rolling Egg Rack", zh: "滾動式堆疊蛋架", category: "廚房", image: "/products/kitchen-03.webp", source: "https://makerworld.com/zh/models/1681075-egg-rolling-stacking-rack", tag: "冰箱收納" },
+  { name: "Under-Shelf Fridge Drawer", zh: "冰箱層板下抽屜", category: "廚房", image: "/products/kitchen-04.webp", source: "https://makerworld.com/zh/models/2018739-under-glass-fridge-drawer-container-with-clip", tag: "冰箱收納" },
+  { name: "Spoon and Lid Stand", zh: "鍋蓋與湯匙料理架", category: "廚房", image: "/products/kitchen-05.webp", source: "https://makerworld.com/zh/models/2076811-kitchen-utensil-holder-spoon-and-lid-stand", tag: "料理檯面" },
+  { name: "Mini Bag Clip", zh: "迷你密封袋夾", category: "廚房", image: "/products/kitchen-06.webp", source: "https://makerworld.com/zh/models/1101226-mini-bag-clip", tag: "食品保存" },
+  { name: "Wavy Capsule Organizer", zh: "波浪咖啡膠囊架", category: "廚房", image: "/products/kitchen-07.webp", source: "https://makerworld.com/zh/models/1452640-wavy-design-nespresso-capsule-holder-organizer", tag: "咖啡角落" },
+  { name: "Gravity Towel Hook", zh: "重力自鎖毛巾掛勾", category: "廚房", image: "/products/kitchen-08.webp", source: "https://makerworld.com/zh/models/1971172-auto-locking-hanger-gravity-towel-hook-ribbed", tag: "壁面機能" },
+  { name: "Rotating Capsule Holder", zh: "旋轉咖啡膠囊塔", category: "廚房", image: "/products/kitchen-09.webp", source: "https://makerworld.com/zh/models/2138627-rotating-nespresso-capsule-holder", tag: "咖啡收納" },
+  { name: "Potato Spiraler", zh: "馬鈴薯螺旋切片器", category: "廚房", image: "/products/kitchen-10.webp", source: "https://makerworld.com/zh/models/1169701-potato-spiraler-3d-printable-kitchen-tool", tag: "創意料理" },
+  { name: "Onami Bowl Raiser", zh: "波浪寵物碗增高架", category: "寵物", image: "/products/pet-01.webp", source: "https://makerworld.com/zh/models/1794239-onami-pet-food-bowl-raiser-stand", tag: "用餐姿勢" },
+  { name: "Automatic Pet Feeder", zh: "造型自動寵物餵食器", category: "寵物", image: "/products/pet-02.webp", source: "https://makerworld.com/zh/models/3037139-auto-pet-feeder-module-thermonuclear-reactor", tag: "定時餵食" },
+  { name: "Spartan Cat Helmet", zh: "斯巴達貓咪造型帽", category: "寵物", image: "/products/pet-03.webp", source: "https://makerworld.com/zh/models/2385611-spartan-warrior-cat-helmet", tag: "趣味攝影" },
+  { name: "Pet Grooming Brush", zh: "寵物日常梳毛刷", category: "寵物", image: "/products/pet-04.webp", source: "https://makerworld.com/zh/models/632101-purrfect-grooming-brush-easy-to-print-strong", tag: "日常清潔" },
+  { name: "Self-Filling Water Bowl", zh: "寵物自動補水碗", category: "寵物", image: "/products/pet-05.webp", source: "https://makerworld.com/zh/models/557391-self-filling-pet-water-bowl-cats-and-small-dogs", tag: "飲水用品" },
+  { name: "Poop Bag Dispenser", zh: "狗狗拾便袋收納器", category: "寵物", image: "/products/pet-06.webp", source: "https://makerworld.com/zh/models/549889-dog-poop-bags-roll-dispenser", tag: "散步用品" },
+  { name: "Cat Construction Helmet", zh: "貓咪工程造型帽", category: "寵物", image: "/products/pet-07.webp", source: "https://makerworld.com/zh/models/2397581-catsite-construction-helmet-for-cats", tag: "趣味攝影" },
+  { name: "TrailBuddy Travel Bowl", zh: "二合一寵物旅行碗", category: "寵物", image: "/products/pet-08.webp", source: "https://makerworld.com/zh/models/1358156-trailbuddy-2-in-1-dog-water-treat-bowl", tag: "戶外散步" },
+  { name: "Cat Jewelry Tray", zh: "貓咪造型首飾托盤", category: "寵物", image: "/products/pet-09.webp", source: "https://makerworld.com/zh/models/1650538-cat-jewelry-tray-playful-animal-home-organizer", tag: "寵物系家居" },
+  { name: "Cat Phone Stand", zh: "可愛貓咪手機架", category: "寵物", image: "/products/pet-10.webp", source: "https://makerworld.com/zh/models/1772567-kawaii-style-cat-phone-stand", tag: "桌面小物" },
 ];
 
-const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "收納"] as const;
+const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "收納", "廚房", "寵物"] as const;
 
 export default function Home() {
   const [active, setActive] = useState<(typeof filters)[number]>("全部");
@@ -98,12 +118,12 @@ export default function Home() {
             選一個喜歡的方向，我們再一起調整顏色、尺寸與細節。
           </p>
           <div className="hero-actions">
-            <a className="primary-button" href="#catalog">瀏覽 40 件選品 <span>↘</span></a>
+            <a className="primary-button" href="#catalog">瀏覽 60 件選品 <span>↘</span></a>
             <a className="text-button" href="#process">了解訂製方式 →</a>
           </div>
           <div className="hero-stats" aria-label="目錄資訊">
-            <div><strong>40</strong><span>精選設計</span></div>
-            <div><strong>6</strong><span>生活系列</span></div>
+            <div><strong>60</strong><span>精選設計</span></div>
+            <div><strong>8</strong><span>生活系列</span></div>
             <div><strong>∞</strong><span>客製可能</span></div>
           </div>
         </div>
