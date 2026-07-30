@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 type Product = {
   name: string;
   zh: string;
-  category: "燈具" | "飾品" | "酒具" | "家居" | "植栽" | "收納" | "廚房" | "寵物";
+  category: "燈具" | "飾品" | "酒具" | "家居" | "植栽" | "收納" | "廚房" | "寵物" | "辦公" | "衛浴";
   image: string;
   lifestyle?: string;
   source: string;
@@ -73,9 +73,29 @@ const products: Product[] = [
   { name: "TrailBuddy Travel Bowl", zh: "二合一寵物旅行碗", category: "寵物", image: "/products/pet-08.webp", source: "https://makerworld.com/zh/models/1358156-trailbuddy-2-in-1-dog-water-treat-bowl", tag: "戶外散步" },
   { name: "Cat Jewelry Tray", zh: "貓咪造型首飾托盤", category: "寵物", image: "/products/pet-09.webp", source: "https://makerworld.com/zh/models/1650538-cat-jewelry-tray-playful-animal-home-organizer", tag: "寵物系家居" },
   { name: "Cat Phone Stand", zh: "可愛貓咪手機架", category: "寵物", image: "/products/pet-10.webp", source: "https://makerworld.com/zh/models/1772567-kawaii-style-cat-phone-stand", tag: "桌面小物" },
+  { name: "Office Organizer & Phone Holder", zh: "辦公收納與手機架", category: "辦公", image: "/products/office-01.webp", lifestyle: "/lifestyle/office-organizer-scenes.png", source: "https://makerworld.com/zh/models/1726061-office-desk-organizer-with-integrated-phone-holder", tag: "桌面整合" },
+  { name: "Ninja Pen Holder", zh: "忍者造型筆筒", category: "辦公", image: "/products/office-02.webp", source: "https://makerworld.com/zh/models/2254330-ninja-pen-holder-custom-desk-decoration", tag: "趣味筆筒" },
+  { name: "Pattern Cable Box", zh: "圖紋電線收納盒", category: "辦公", image: "/products/office-03.webp", source: "https://makerworld.com/zh/models/1689678-cable-organizer-box-multiple-patterns", tag: "線材整理" },
+  { name: "Burrow Desk Organizer", zh: "洞穴式桌面收納座", category: "辦公", image: "/products/office-04.webp", source: "https://makerworld.com/zh/models/2422868-burrow-desk-organiser-organizer", tag: "文具收納" },
+  { name: "Heavy Duty Wall Bracket", zh: "高承重壁面層架架", category: "辦公", image: "/products/office-05.webp", source: "https://makerworld.com/zh/models/697743-heavy-duty-wall-bracket", tag: "壁面機能" },
+  { name: "Crumpled Bag Pen Holder", zh: "皺紙袋造型筆筒", category: "辦公", image: "/products/office-06.webp", source: "https://makerworld.com/zh/models/2630368-crumpled-paper-bag-pen-holder-desk-organizer", tag: "雕塑收納" },
+  { name: "Scandinavian Organizer", zh: "北歐多用途收納盒", category: "辦公", image: "/products/office-07.webp", source: "https://makerworld.com/zh/models/1986918-scandinavian-makeup-bath-kitchen-organiser-3", tag: "多用途" },
+  { name: "Japandi Tray", zh: "日系侘寂桌面托盤", category: "辦公", image: "/products/office-08.webp", source: "https://makerworld.com/zh/models/2419531-japandi-tray", tag: "桌面佈置" },
+  { name: "Stackable Modular Shelf", zh: "可堆疊模組桌上架", category: "辦公", image: "/products/office-09.webp", source: "https://makerworld.com/zh/models/2474195-stackable-modular-shelf-24x16-cm-2-3-levels", tag: "模組層架" },
+  { name: "Stackable Baskets", zh: "可堆疊桌面收納籃", category: "辦公", image: "/products/office-10.webp", source: "https://makerworld.com/zh/models/1526459-stackable-baskets", tag: "文件收納" },
+  { name: "Brush & Paste Holder", zh: "牙刷牙膏瀝水座", category: "衛浴", image: "/products/bath-01.webp", source: "https://makerworld.com/zh/models/644568-toothbrush-and-toothpaste-holder", tag: "洗漱收納" },
+  { name: "Toothpaste Squeezer", zh: "棘輪式牙膏擠壓器", category: "衛浴", image: "/products/bath-02.webp", source: "https://makerworld.com/zh/models/30246-ratcheted-toothpaste-tube-squeezer", tag: "日常機能" },
+  { name: "Compartment Roll Holder", zh: "分層衛生紙收納架", category: "衛浴", image: "/products/bath-03.webp", source: "https://makerworld.com/zh/models/1636314-compartment-toilet-paper-holder", tag: "衛浴收納" },
+  { name: "Ribbed Soap Dispenser", zh: "條紋質感給皂瓶", category: "衛浴", image: "/products/bath-04.webp", lifestyle: "/lifestyle/soap-dispenser-scenes.png", source: "https://makerworld.com/zh/models/1941319-aesthetic-soap-dispenser", tag: "檯面美化" },
+  { name: "Bow Container", zh: "蝴蝶結造型收納罐", category: "衛浴", image: "/products/bath-05.webp", source: "https://makerworld.com/zh/models/2377183-bow-container-with-lid", tag: "小物收納" },
+  { name: "Pads & Swabs Organizer", zh: "化妝棉與棉花棒收納", category: "衛浴", image: "/products/bath-06.webp", source: "https://makerworld.com/zh/models/2151198-pads-swabs-holder-ribbed-bath-organizer", tag: "梳妝整理" },
+  { name: "Gravity Towel Hook", zh: "條紋重力毛巾掛勾", category: "衛浴", image: "/products/bath-07.webp", source: "https://makerworld.com/zh/models/1971172-auto-locking-hanger-gravity-towel-hook-ribbed", tag: "毛巾收納" },
+  { name: "Hair Dryer Holder", zh: "吹風機壁掛收納座", category: "衛浴", image: "/products/bath-08.webp", source: "https://makerworld.com/zh/models/1909827-dyson-dryer-holder", tag: "壁面整理" },
+  { name: "Travel Brush Holder", zh: "旅行牙刷保護盒", category: "衛浴", image: "/products/bath-09.webp", source: "https://makerworld.com/zh/models/2106307-travel-toothbrush-holder", tag: "旅行用品" },
+  { name: "Stackable Roll Dispenser", zh: "可堆疊衛生紙補充盒", category: "衛浴", image: "/products/bath-10.webp", source: "https://makerworld.com/zh/models/2104783-simple-stackable-toilet-roll-dispenser-max", tag: "備品收納" },
 ];
 
-const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "收納", "廚房", "寵物"] as const;
+const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "收納", "廚房", "寵物", "辦公", "衛浴"] as const;
 
 export default function Home() {
   const [active, setActive] = useState<(typeof filters)[number]>("全部");
@@ -118,12 +138,12 @@ export default function Home() {
             選一個喜歡的方向，我們再一起調整顏色、尺寸與細節。
           </p>
           <div className="hero-actions">
-            <a className="primary-button" href="#catalog">瀏覽 60 件選品 <span>↘</span></a>
+            <a className="primary-button" href="#catalog">瀏覽 80 件選品 <span>↘</span></a>
             <a className="text-button" href="#process">了解訂製方式 →</a>
           </div>
           <div className="hero-stats" aria-label="目錄資訊">
-            <div><strong>60</strong><span>精選設計</span></div>
-            <div><strong>8</strong><span>生活系列</span></div>
+            <div><strong>80</strong><span>精選設計</span></div>
+            <div><strong>10</strong><span>生活系列</span></div>
             <div><strong>∞</strong><span>客製可能</span></div>
           </div>
         </div>
