@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 type Product = {
   name: string;
   zh: string;
-  category: "燈具" | "飾品" | "酒具" | "家居";
+  category: "燈具" | "飾品" | "酒具" | "家居" | "植栽" | "收納";
   image: string;
   source: string;
   tag: string;
@@ -36,9 +36,25 @@ const products: Product[] = [
   { name: "Melting Wall Shelf", zh: "融化感造型壁架", category: "家居", image: "/products/decor-04.webp", source: "https://makerworld.com/zh/models/2211015-melting-wall-shelf-dripping-modern-shelf", tag: "牆面收納" },
   { name: "Hexagon Twisty Object", zh: "六角扭轉桌面擺件", category: "家居", image: "/products/decor-05.webp", source: "https://makerworld.com/zh/models/2738294-hexagon-twisty-fidget-toy", tag: "互動擺件" },
   { name: "Minimal Decorative Tray", zh: "極簡居家托盤", category: "家居", image: "/products/decor-06.webp", source: "https://makerworld.com/zh/models/2350771-decorative-tray-home", tag: "日常收納" },
+  { name: "Modern Japandi Ribbed Plant Pot", zh: "日系侘寂條紋植栽盆", category: "植栽", image: "/products/planter-01.webp", source: "https://makerworld.com/zh/models/2414690-modern-japandi-ribbed-plant-pot-with-drainage", tag: "排水花盆" },
+  { name: "The Claudia Planter", zh: "Claudia 雕塑植栽盆", category: "植栽", image: "/products/planter-02.webp", source: "https://makerworld.com/zh/models/1399976-the-claudia-planter-a-botany-chic-creation-decor", tag: "造型花器" },
+  { name: "Mid Century Planter", zh: "世紀中期植栽盆", category: "植栽", image: "/products/planter-03.webp", source: "https://makerworld.com/zh/models/1616690-mid-century-planter-with-built-in-drip-tray", tag: "內建滴水盤" },
+  { name: "HydroSquare Rain Planter", zh: "水循環方形植栽燈", category: "植栽", image: "/products/planter-04.webp", source: "https://makerworld.com/zh/models/2421936-led-kit-001-hydrosquare-rain-planter", tag: "植栽照明" },
+  { name: "Japandi Self-Watering Pot", zh: "日系自動澆水花盆", category: "植栽", image: "/products/planter-05.webp", source: "https://makerworld.com/zh/models/1339226-japandi-plant-pot-3-versions-automatic-watering", tag: "自動澆水" },
+  { name: "Modern Ribbed Planter", zh: "現代條紋花盆", category: "植栽", image: "/products/planter-06.webp", source: "https://makerworld.com/zh/models/2593518-modern-ribbed-planter-vase", tag: "花盆／花器" },
+  { name: "Japandi Planter with Stand", zh: "日系腳架植栽盆", category: "植栽", image: "/products/planter-07.webp", source: "https://makerworld.com/zh/models/2534523-japandi-planter-hidden-drip-tray-stand", tag: "隱藏滴水盤" },
+  { name: "Wall-Mounted Ball Plant Pot", zh: "壁掛球形植栽盆", category: "植栽", image: "/products/planter-08.webp", source: "https://makerworld.com/zh/models/1272196-wall-mounted-ball-plant-pot", tag: "牆面綠意" },
+  { name: "Infinity Spool Tower", zh: "無限延伸線材收納塔", category: "收納", image: "/products/storage-01.webp", source: "https://makerworld.com/zh/models/2172346-infinity-spool-tower-the-ultimate-storage-solution", tag: "模組系統" },
+  { name: "Modular Desk Organizer", zh: "模組桌面收納系統", category: "收納", image: "/products/storage-02.webp", source: "https://makerworld.com/zh/models/2087511-modular-desk-organizer-system-magsafe-phone-stand", tag: "手機架" },
+  { name: "Stackable Organizer Drawers", zh: "可堆疊桌面抽屜", category: "收納", image: "/products/storage-03.webp", source: "https://makerworld.com/zh/models/1889262-stackable-desktop-organizer-with-drawers", tag: "抽屜收納" },
+  { name: "Ribbed Sliding-Lid Box", zh: "條紋滑蓋收納盒", category: "收納", image: "/products/storage-04.webp", source: "https://makerworld.com/zh/models/2115383-sliding-lid-storage-box-organizer-ribbed-design", tag: "滑蓋設計" },
+  { name: "Clean Modular Organizer", zh: "極簡模組桌面收納", category: "收納", image: "/products/storage-05.webp", source: "https://makerworld.com/zh/models/2734467-stackable-desktop-organizer-clean-modular", tag: "可堆疊" },
+  { name: "Hollow Storage Basket", zh: "鏤空堆疊收納籃", category: "收納", image: "/products/storage-06.webp", source: "https://makerworld.com/zh/models/2583249-exquisite-and-high-end-sturdy-and-practical-stacka", tag: "居家收納" },
+  { name: "Post-It Note Holder", zh: "便利貼與模板收納座", category: "收納", image: "/products/storage-07.webp", source: "https://makerworld.com/zh/models/931302-holder-for-post-it-notes-stencils-included", tag: "文具收納" },
+  { name: "Under-Shelf Organizer", zh: "層板下方小型收納盒", category: "收納", image: "/products/storage-08.webp", source: "https://makerworld.com/zh/models/1962101-under-shelf-organizer-small-version", tag: "空間利用" },
 ];
 
-const filters = ["全部", "燈具", "飾品", "酒具", "家居"] as const;
+const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "收納"] as const;
 
 export default function Home() {
   const [active, setActive] = useState<(typeof filters)[number]>("全部");
@@ -80,12 +96,12 @@ export default function Home() {
             選一個喜歡的方向，我們再一起調整顏色、尺寸與細節。
           </p>
           <div className="hero-actions">
-            <a className="primary-button" href="#catalog">瀏覽 24 件選品 <span>↘</span></a>
+            <a className="primary-button" href="#catalog">瀏覽 40 件選品 <span>↘</span></a>
             <a className="text-button" href="#process">了解訂製方式 →</a>
           </div>
           <div className="hero-stats" aria-label="目錄資訊">
-            <div><strong>24</strong><span>精選設計</span></div>
-            <div><strong>4</strong><span>生活系列</span></div>
+            <div><strong>40</strong><span>精選設計</span></div>
+            <div><strong>6</strong><span>生活系列</span></div>
             <div><strong>∞</strong><span>客製可能</span></div>
           </div>
         </div>
