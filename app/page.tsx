@@ -2,10 +2,12 @@
 
 import { useMemo, useState } from "react";
 
+type Category = "燈具" | "飾品" | "酒具" | "家居" | "植栽" | "收納" | "廚房" | "寵物" | "辦公" | "衛浴" | "旅行" | "戶外";
+
 type Product = {
   name: string;
   zh: string;
-  category: "燈具" | "飾品" | "酒具" | "家居" | "植栽" | "收納" | "廚房" | "寵物" | "辦公" | "衛浴";
+  category: Category;
   image: string;
   lifestyle?: string;
   source: string;
@@ -93,9 +95,44 @@ const products: Product[] = [
   { name: "Hair Dryer Holder", zh: "吹風機壁掛收納座", category: "衛浴", image: "/products/bath-08.webp", source: "https://makerworld.com/zh/models/1909827-dyson-dryer-holder", tag: "壁面整理" },
   { name: "Travel Brush Holder", zh: "旅行牙刷保護盒", category: "衛浴", image: "/products/bath-09.webp", source: "https://makerworld.com/zh/models/2106307-travel-toothbrush-holder", tag: "旅行用品" },
   { name: "Stackable Roll Dispenser", zh: "可堆疊衛生紙補充盒", category: "衛浴", image: "/products/bath-10.webp", source: "https://makerworld.com/zh/models/2104783-simple-stackable-toilet-roll-dispenser-max", tag: "備品收納" },
+  { name: "Multi-Purpose Hygiene Kit", zh: "多功能旅行盥洗盒", category: "旅行", image: "/products/travel-01.webp", source: "https://makerworld.com/zh/models/714018-multi-purpose-hygiene-kit", tag: "盥洗收納" },
+  { name: "Toothbrush Head Travel Case", zh: "電動牙刷頭旅行盒", category: "旅行", image: "/products/travel-02.webp", source: "https://makerworld.com/zh/models/703962-oral-b-toothbrush-head-travel-case", tag: "衛生防護" },
+  { name: "Travel Boxes", zh: "輕巧旅行分類盒", category: "旅行", image: "/products/travel-03.webp", source: "https://makerworld.com/zh/models/702774-travel-boxes", tag: "行李整理" },
+  { name: "USB-A to USB-C Cable Organizer", zh: "USB-A 旅行線材收納器", category: "旅行", image: "/products/travel-04.webp", source: "https://makerworld.com/zh/models/709889-travel-cable-organizer-usb-a-to-usb-c", tag: "線材整理" },
+  { name: "USB-C Cable Organizer", zh: "USB-C 旅行線材收納器", category: "旅行", image: "/products/travel-05.webp", source: "https://makerworld.com/zh/models/716789-travel-cable-organizer-usb-c-to-usb-c", tag: "充電配件" },
+  { name: "Stackable Travel Capsule", zh: "可堆疊旅行膠囊盒", category: "旅行", image: "/products/travel-06.webp", lifestyle: "/lifestyle/travel-capsule-scenes.png", source: "https://makerworld.com/zh/models/710610-stackable-container-capsule-modular-organizer", tag: "模組收納" },
+  { name: "Retro Luggage Tags", zh: "復古趣味行李吊牌", category: "旅行", image: "/products/travel-07.webp", source: "https://makerworld.com/zh/models/698438-retro-fun-perfect-luggage-tags-for-you", tag: "行李識別" },
+  { name: "Customizable Luggage Tags", zh: "個人化文字行李牌", category: "旅行", image: "/products/travel-08.webp", source: "https://makerworld.com/zh/models/712323-customizable-luggage-tags-practical-stylish", tag: "姓名訂製" },
+  { name: "Luggage Tag Collection", zh: "多款式行李牌組", category: "旅行", image: "/products/travel-09.webp", source: "https://makerworld.com/zh/models/695070-luggage-tag-collection", tag: "旅行配色" },
+  { name: "Custom QR Luggage Tag", zh: "自訂 QR 行李吊牌", category: "旅行", image: "/products/travel-10.webp", source: "https://makerworld.com/zh/models/710726-custom-qr-code-luggage-bag-tag", tag: "智慧識別" },
+  { name: "Fire Making Wallet Kit", zh: "隨身生火工具卡盒", category: "戶外", image: "/products/outdoor-01.webp", source: "https://makerworld.com/zh/models/219603-fire-making-wallet-kit", tag: "露營工具" },
+  { name: "Tick Card with Coin", zh: "戶外除蜱工具卡", category: "戶外", image: "/products/outdoor-02.webp", source: "https://makerworld.com/zh/models/596736-tick-card-with-coin", tag: "隨身防護" },
+  { name: "Tick Remover", zh: "輕巧除蜱工具", category: "戶外", image: "/products/outdoor-03.webp", source: "https://makerworld.com/zh/models/53207-tick-remover", tag: "寵物／健行" },
+  { name: "Snap-On Can Cap", zh: "卡扣式飲料罐防塵蓋", category: "戶外", image: "/products/outdoor-04.webp", source: "https://makerworld.com/zh/models/517587-snap-on-can-cap-edmonton-oilers-version", tag: "飲品防護" },
+  { name: "Playing Card Storage Box", zh: "露營撲克牌收納盒", category: "戶外", image: "/products/outdoor-05.webp", source: "https://makerworld.com/zh/models/424195-standard-deck-of-card-storage-box", tag: "營地娛樂" },
+  { name: "Camping Chair Feet", zh: "露營椅防陷腳墊", category: "戶外", image: "/products/outdoor-06.webp", source: "https://makerworld.com/zh/models/187543-helinox-chair-feet", tag: "椅具配件" },
+  { name: "Camp Chair Cup Holder", zh: "露營椅側掛杯架", category: "戶外", image: "/products/outdoor-07.webp", source: "https://makerworld.com/zh/models/624983-camp-chair-cup-holder", tag: "飲品收納" },
+  { name: "Backpacking Chair Sand Adaptor", zh: "背包椅沙地防陷轉接座", category: "戶外", image: "/products/outdoor-08.webp", source: "https://makerworld.com/zh/models/745036-backpacking-chair-adaptor-to-prevent-sinking-chair", tag: "沙地機能" },
+  { name: "Camping Spice Rack", zh: "旅行露營香料罐架", category: "戶外", image: "/products/outdoor-09.webp", source: "https://makerworld.com/zh/models/704086-travel-camping-spice-rack-with-containers", tag: "戶外料理" },
+  { name: "Beach Table with Umbrella", zh: "迷你遮陽傘海灘桌", category: "戶外", image: "/products/outdoor-10.webp", lifestyle: "/lifestyle/beach-table-scenes.png", source: "https://makerworld.com/zh/models/484308-table-with-umbrella-for-beach-pool-or-camping", tag: "海灘野餐" },
 ];
 
-const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "收納", "廚房", "寵物", "辦公", "衛浴"] as const;
+const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "收納", "廚房", "寵物", "辦公", "衛浴", "旅行", "戶外"] as const;
+
+const categoryNotes: Record<Category, { use: string; styling: string; custom: string }> = {
+  燈具: { use: "作為床邊、閱讀角或餐桌旁的柔和輔助光，讓造型與光影一起成為焦點。", styling: "搭配木質、亞麻與低彩度牆面，能放大燈罩層次與列印紋理。", custom: "可依空間洽詢燈罩色彩、尺寸與底座搭配，並確認適用燈組。" },
+  飾品: { use: "集中展示戒指、手環與項鍊，拿取方便，也讓每天的搭配一目了然。", styling: "放在梳妝台或玄關，以首飾金屬色對比霧面材質，形成精緻層次。", custom: "可洽詢高度、分枝配置、姓名字樣與適合首飾數量的尺寸。" },
+  酒具: { use: "適合家庭聚會、吧台與野餐開瓶使用，兼具互動感與收納機能。", styling: "搭配木托盤、透明玻璃與深色桌面，營造輕鬆但有設計感的飲酒角落。", custom: "可洽詢握柄色彩、尺寸、文字與適合瓶蓋規格；製作前確認結構強度。" },
+  家居: { use: "放置鑰匙、香氛與日常小物，或單獨作為空間中的雕塑擺件。", styling: "適合玄關、層架與茶几，搭配石材、木質與留白能凸顯輪廓。", custom: "可依擺放位置洽詢尺寸、表面質感與符合室內色票的配色。" },
+  植栽: { use: "承接小型觀葉、多肉或香草植物，依款式提供排水、滴水或壁掛功能。", styling: "以同色系花器成組陳列，搭配木架與自然光，建立有節奏的綠意角落。", custom: "可依盆徑、根系與澆水方式洽詢尺寸、排水孔及托盤配置。" },
+  收納: { use: "整理桌面、層板與櫃內零散物件，利用堆疊或模組結構提高空間效率。", styling: "以兩至三種低彩度色分區，搭配標籤與整齊留白，視覺更清爽。", custom: "可洽詢格數、抽屜高度、堆疊方式與現有空間的精準尺寸。" },
+  廚房: { use: "用於料理備料、餐具暫放、冰箱分類或咖啡角落的日常整理。", styling: "搭配淺木、白色檯面與不鏽鋼器具，維持乾淨實用的料理視覺。", custom: "可依器具與櫃體尺寸調整；接觸食物或高溫前會先確認合適材料與用途。" },
+  寵物: { use: "協助飲水、餵食、梳理、散步或趣味攝影，讓日常照護更順手。", styling: "以居家主色搭配寵物用品，讓碗架與收納配件自然融入空間。", custom: "可依寵物體型、用品規格與姓名洽詢高度、尺寸及配色。" },
+  辦公: { use: "集中筆具、手機、文件與線材，減少桌面干擾並保留快速拿取動線。", styling: "用同色系模組搭配木桌與金屬文具，建立安靜、清楚的工作區。", custom: "可依桌深、用品數量、線材出口與企業色洽詢尺寸及模組組合。" },
+  衛浴: { use: "整理盥洗用品、毛巾與備品，讓檯面保持乾燥並縮短早晚拿取時間。", styling: "搭配石紋檯面、霧面五金與柔和中性色，營造乾淨的飯店感。", custom: "可依瓶罐、壁面與抽屜尺寸洽詢配色、排水方式與安裝結構。" },
+  旅行: { use: "在行李箱、盥洗包或隨身包中分類線材、衛生用品與小型必需品。", styling: "以一致色系區分用途，搭配布質收納袋，打開行李時依然整齊清楚。", custom: "可洽詢姓名、QR 資訊、容量、分隔與符合行李配色的客製版本。" },
+  戶外: { use: "服務露營、健行、沙灘與野餐情境，讓飲品、椅具與小工具更好使用。", styling: "選擇高辨識度色彩搭配帆布、木質與金屬裝備，兼顧安全與風格。", custom: "可依裝備規格、固定方式與戶外環境洽詢尺寸、色彩及耐候材料。" },
+};
 
 export default function Home() {
   const [active, setActive] = useState<(typeof filters)[number]>("全部");
@@ -138,12 +175,12 @@ export default function Home() {
             選一個喜歡的方向，我們再一起調整顏色、尺寸與細節。
           </p>
           <div className="hero-actions">
-            <a className="primary-button" href="#catalog">瀏覽 80 件選品 <span>↘</span></a>
+            <a className="primary-button" href="#catalog">瀏覽 100 件選品 <span>↘</span></a>
             <a className="text-button" href="#process">了解訂製方式 →</a>
           </div>
           <div className="hero-stats" aria-label="目錄資訊">
-            <div><strong>80</strong><span>精選設計</span></div>
-            <div><strong>10</strong><span>生活系列</span></div>
+            <div><strong>100</strong><span>精選設計</span></div>
+            <div><strong>12</strong><span>生活系列</span></div>
             <div><strong>∞</strong><span>客製可能</span></div>
           </div>
         </div>
@@ -245,9 +282,9 @@ export default function Home() {
               )}
             </div>
             <div className="use-grid">
-              <div><span>01</span><h3>怎麼使用</h3><p>作為日常實用品，也能成為空間中的視覺焦點。</p></div>
-              <div><span>02</span><h3>怎麼搭配</h3><p>搭配木質、石材與低彩度家具，能凸顯 3D 列印紋理。</p></div>
-              <div><span>03</span><h3>怎麼訂製</h3><p>可洽詢色彩、尺寸與局部細節；正式製作前會先確認可用授權。</p></div>
+              <div><span>01</span><h3>怎麼使用</h3><p>{categoryNotes[selected.category].use}</p></div>
+              <div><span>02</span><h3>怎麼搭配</h3><p>{categoryNotes[selected.category].styling}</p></div>
+              <div><span>03</span><h3>怎麼訂製</h3><p>{categoryNotes[selected.category].custom} 正式製作前會先確認可用授權。</p></div>
             </div>
             <a className="modal-cta" href="#contact" onClick={() => setSelected(null)}>詢問這件商品 →</a>
           </article>
