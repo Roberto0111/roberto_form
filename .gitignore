@@ -40,3 +40,6 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# local Instagram API credentials
+/social/instagram/api/config.toml
