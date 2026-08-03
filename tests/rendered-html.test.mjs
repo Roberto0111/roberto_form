@@ -34,6 +34,9 @@ test("server-renders the Robert Form catalog and order contacts", async () => {
   assert.match(html, /瀏覽 97 件選品/);
   assert.match(html, /loxa8858@gmail\.com/);
   assert.match(html, /instagram\.com\/radish_studio_/);
+  assert.match(html, /立即詢問訂製/);
+  assert.match(html, /Instagram 私訊/);
+  assert.match(html, /Email 訂製洽詢/);
   assert.doesNotMatch(html, /<a[^>]+href=["'][^"']*makerworld\.com/i);
 });
 

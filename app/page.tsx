@@ -163,7 +163,9 @@ export default function Home() {
           <a href="#process">訂製流程</a>
           <a href="#about">關於作品</a>
         </nav>
-        <a className="header-cta" href="#contact">洽詢訂製</a>
+        <a className="header-cta" href="#custom-order">
+          <span aria-hidden="true" />立即詢問訂製 ↘
+        </a>
       </header>
 
       <section className="hero" id="top">
@@ -286,13 +288,24 @@ export default function Home() {
               <div><span>02</span><h3>怎麼搭配</h3><p>{categoryNotes[selected.category].styling}</p></div>
               <div><span>03</span><h3>怎麼訂製</h3><p>{categoryNotes[selected.category].custom} 正式製作前會先確認可用授權。</p></div>
             </div>
-            <a
-              className="modal-cta"
-              href={`mailto:loxa8858@gmail.com?subject=${encodeURIComponent(`ROBERT FORM 訂製洽詢｜${selected.zh}`)}`}
-              onClick={() => setSelected(null)}
-            >
-              詢問這件商品 →
-            </a>
+            <div className="modal-actions">
+              <a
+                className="modal-cta instagram"
+                href="https://www.instagram.com/radish_studio_/"
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setSelected(null)}
+              >
+                Instagram 私訊這件商品 ↗
+              </a>
+              <a
+                className="modal-cta email"
+                href={`mailto:loxa8858@gmail.com?subject=${encodeURIComponent(`ROBERT FORM 訂製洽詢｜${selected.zh}`)}`}
+                onClick={() => setSelected(null)}
+              >
+                Email 詢問 →
+              </a>
+            </div>
           </article>
         </div>
       )}
@@ -307,6 +320,36 @@ export default function Home() {
           <li><span>02</span><h3>確認授權</h3><p>先確認原作授權，再討論顏色、尺寸與調整範圍。</p></li>
           <li><span>03</span><h3>打樣製作</h3><p>確認材料與細節，完成試印後再進入正式製作。</p></li>
         </ol>
+      </section>
+
+      <section className="order-contact" id="custom-order">
+        <div className="order-contact-copy">
+          <p className="eyebrow">START A CUSTOM ORDER / 03</p>
+          <h2>有想做的款式？<br />直接傳給我們。</h2>
+          <p>
+            把商品名稱、截圖或你的想法傳來，再一起確認尺寸、顏色、數量與授權狀況。
+          </p>
+        </div>
+        <div className="order-contact-options">
+          <a
+            className="contact-card instagram"
+            href="https://www.instagram.com/radish_studio_/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>回覆最快</span>
+            <strong>Instagram 私訊</strong>
+            <small>@radish_studio_ ↗</small>
+          </a>
+          <a
+            className="contact-card email"
+            href="mailto:loxa8858@gmail.com?subject=ROBERT%20FORM%20訂製洽詢"
+          >
+            <span>適合完整需求</span>
+            <strong>Email 訂製洽詢</strong>
+            <small>loxa8858@gmail.com ↗</small>
+          </a>
+        </div>
       </section>
 
       <section className="about" id="about">
@@ -327,6 +370,24 @@ export default function Home() {
         </div>
         <small>Curated 3D design inspiration · Licensing checked before production</small>
       </footer>
+
+      <aside className="contact-dock" aria-label="快速聯絡訂製">
+        <span className="dock-label">有想法？現在就問</span>
+        <a
+          className="dock-action instagram"
+          href="https://www.instagram.com/radish_studio_/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          IG 私訊
+        </a>
+        <a
+          className="dock-action email"
+          href="mailto:loxa8858@gmail.com?subject=ROBERT%20FORM%20訂製洽詢"
+        >
+          Email
+        </a>
+      </aside>
     </main>
   );
 }
