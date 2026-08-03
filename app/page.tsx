@@ -20,7 +20,6 @@ const products: Product[] = [
   { name: "Lush Leaf Lamp", zh: "繁葉造型燈", category: "燈具", image: "/products/lamp-03.webp", lifestyle: "/lifestyle/lamp-leaf-scenes.webp", source: "https://makerworld.com/zh/models/1913623-lush-leaf-lamp-pendant-or-standing", tag: "吊燈／立燈" },
   { name: "Wavy Lamp E27", zh: "波浪 E27 燈", category: "燈具", image: "/products/lamp-04.webp", lifestyle: "/lifestyle/wavy-e27-scenes.webp", source: "https://makerworld.com/zh/models/965182-wavy-lamp-e27-e26-base-petg", tag: "現代風格" },
   { name: "Super Fast Print Lamp", zh: "極速列印桌燈", category: "燈具", image: "/products/lamp-05.webp", lifestyle: "/lifestyle/fast-lamp-scenes.webp", source: "https://makerworld.com/zh/models/2175648-led-kit-001-super-fast-print-lamp-55-mins-30g", tag: "輕量設計" },
-  { name: "Wavy Ambient Lamp", zh: "流線氛圍燈", category: "燈具", image: "/products/lamp-06.webp", lifestyle: "/lifestyle/wavy-ambient-scenes.webp", source: "https://makerworld.com/zh/models/965182-wavy-lamp-e27-e26-base-petg", tag: "空間佈置" },
   { name: "Jewelry Organizer Stand", zh: "首飾展示收納架", category: "飾品", image: "/products/jewelry-01.webp", lifestyle: "/lifestyle/jewelry-organizer-scenes.webp", source: "https://makerworld.com/zh/models/757412-jewelry-organizer-necklace-bracelet-ring-stand", tag: "項鍊／戒指" },
   { name: "Sculptural Jewelry Organizer", zh: "雕塑感首飾架", category: "飾品", image: "/products/jewelry-02.webp", lifestyle: "/lifestyle/sculptural-jewelry-scenes.webp", source: "https://makerworld.com/zh/models/1092762-jewelry-organizer", tag: "桌面收納" },
   { name: "Big Letter Beads", zh: "大型字母串珠", category: "飾品", image: "/products/jewelry-03.webp", lifestyle: "/lifestyle/letter-bead-scenes.webp", source: "https://makerworld.com/zh/models/2504346-big-letter-beads-5-inches", tag: "個人化" },
@@ -38,7 +37,6 @@ const products: Product[] = [
   { name: "Decorative HOME Tray", zh: "HOME 裝飾托盤", category: "家居", image: "/products/decor-03.webp", lifestyle: "/lifestyle/home-tray-scenes.webp", source: "https://makerworld.com/zh/models/2350771-decorative-tray-home", tag: "桌面選物" },
   { name: "Melting Wall Shelf", zh: "融化感造型壁架", category: "家居", image: "/products/decor-04.webp", lifestyle: "/lifestyle/melting-shelf-scenes.webp", source: "https://makerworld.com/zh/models/2211015-melting-wall-shelf-dripping-modern-shelf", tag: "牆面收納" },
   { name: "Hexagon Twisty Object", zh: "六角扭轉桌面擺件", category: "家居", image: "/products/decor-05.webp", lifestyle: "/lifestyle/twisty-fidget-scenes.webp", source: "https://makerworld.com/zh/models/2738294-hexagon-twisty-fidget-toy", tag: "互動擺件" },
-  { name: "Minimal Decorative Tray", zh: "極簡居家托盤", category: "家居", image: "/products/decor-06.webp", lifestyle: "/lifestyle/minimal-tray-scenes.webp", source: "https://makerworld.com/zh/models/2350771-decorative-tray-home", tag: "日常收納" },
   { name: "Modern Japandi Ribbed Plant Pot", zh: "日系侘寂條紋植栽盆", category: "植栽", image: "/products/planter-01.webp", lifestyle: "/lifestyle/planter-scenes.webp", source: "https://makerworld.com/zh/models/2414690-modern-japandi-ribbed-plant-pot-with-drainage", tag: "排水花盆" },
   { name: "The Claudia Planter", zh: "Claudia 雕塑植栽盆", category: "植栽", image: "/products/planter-02.webp", lifestyle: "/lifestyle/claudia-planter-scenes.webp", source: "https://makerworld.com/zh/models/1399976-the-claudia-planter-a-botany-chic-creation-decor", tag: "造型花器" },
   { name: "Mid Century Planter", zh: "世紀中期植栽盆", category: "植栽", image: "/products/planter-03.webp", lifestyle: "/lifestyle/midcentury-planter-scenes.webp", source: "https://makerworld.com/zh/models/1616690-mid-century-planter-with-built-in-drip-tray", tag: "內建滴水盤" },
@@ -62,7 +60,6 @@ const products: Product[] = [
   { name: "Spoon and Lid Stand", zh: "鍋蓋與湯匙料理架", category: "廚房", image: "/products/kitchen-05.webp", lifestyle: "/lifestyle/spoon-lid-stand-scenes.webp", source: "https://makerworld.com/zh/models/2076811-kitchen-utensil-holder-spoon-and-lid-stand", tag: "料理檯面" },
   { name: "Mini Bag Clip", zh: "迷你密封袋夾", category: "廚房", image: "/products/kitchen-06.webp", lifestyle: "/lifestyle/mini-clip-scenes.webp", source: "https://makerworld.com/zh/models/1101226-mini-bag-clip", tag: "食品保存" },
   { name: "Wavy Capsule Organizer", zh: "波浪咖啡膠囊架", category: "廚房", image: "/products/kitchen-07.webp", lifestyle: "/lifestyle/wavy-capsule-scenes.webp", source: "https://makerworld.com/zh/models/1452640-wavy-design-nespresso-capsule-holder-organizer", tag: "咖啡角落" },
-  { name: "Gravity Towel Hook", zh: "重力自鎖毛巾掛勾", category: "廚房", image: "/products/kitchen-08.webp", lifestyle: "/lifestyle/gravity-towel-scenes.webp", source: "https://makerworld.com/zh/models/1971172-auto-locking-hanger-gravity-towel-hook-ribbed", tag: "壁面機能" },
   { name: "Rotating Capsule Holder", zh: "旋轉咖啡膠囊塔", category: "廚房", image: "/products/kitchen-09.webp", lifestyle: "/lifestyle/rotating-capsule-scenes.webp", source: "https://makerworld.com/zh/models/2138627-rotating-nespresso-capsule-holder", tag: "咖啡收納" },
   { name: "Potato Spiraler", zh: "馬鈴薯螺旋切片器", category: "廚房", image: "/products/kitchen-10.webp", lifestyle: "/lifestyle/potato-spiraler-scenes.webp", source: "https://makerworld.com/zh/models/1169701-potato-spiraler-3d-printable-kitchen-tool", tag: "創意料理" },
   { name: "Onami Bowl Raiser", zh: "波浪寵物碗增高架", category: "寵物", image: "/products/pet-01.webp", lifestyle: "/lifestyle/pet-bowl-scenes.webp", source: "https://makerworld.com/zh/models/1794239-onami-pet-food-bowl-raiser-stand", tag: "用餐姿勢" },
@@ -178,11 +175,11 @@ export default function Home() {
             選一個喜歡的方向，我們再一起調整顏色、尺寸與細節。
           </p>
           <div className="hero-actions">
-            <a className="primary-button" href="#catalog">瀏覽 100 件選品 <span>↘</span></a>
+            <a className="primary-button" href="#catalog">瀏覽 97 件選品 <span>↘</span></a>
             <a className="text-button" href="#process">了解訂製方式 →</a>
           </div>
           <div className="hero-stats" aria-label="目錄資訊">
-            <div><strong>100</strong><span>精選設計</span></div>
+            <div><strong>97</strong><span>精選設計</span></div>
             <div><strong>12</strong><span>生活系列</span></div>
             <div><strong>∞</strong><span>客製可能</span></div>
           </div>

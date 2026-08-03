@@ -31,16 +31,21 @@ test("server-renders the Robert Form catalog and order contacts", async () => {
   const html = await response.text();
   assert.match(html, /<title>ROBERT FORM｜3D 列印生活選品<\/title>/i);
   assert.match(html, /把想像/);
-  assert.match(html, /瀏覽 100 件選品/);
+  assert.match(html, /瀏覽 97 件選品/);
   assert.match(html, /loxa8858@gmail\.com/);
   assert.match(html, /instagram\.com\/radish_studio_/);
   assert.doesNotMatch(html, /<a[^>]+href=["'][^"']*makerworld\.com/i);
 });
 
-test("ships 100 products and the scheduled Reel batch", async () => {
+test("ships 97 unique products and the scheduled Reel batch", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const productCount = (page.match(/\{ name:/g) ?? []).length;
-  assert.equal(productCount, 100);
+  assert.equal(productCount, 97);
+
+  const productSources = [...page.matchAll(/source: "([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  assert.equal(new Set(productSources).size, productSources.length);
   assert.doesNotMatch(page, /href=\{product\.source\}/);
 
   const reelNames = [
