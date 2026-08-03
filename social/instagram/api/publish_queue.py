@@ -129,9 +129,16 @@ def main() -> int:
     mode.add_argument("--check-token", action="store_true")
     mode.add_argument("--dry-run", action="store_true")
     mode.add_argument("--publish-next", action="store_true")
+    parser.add_argument(
+        "--allow-same-day",
+        action="store_true",
+        help="Manual-only override after an explicit same-day publish request",
+    )
     args = parser.parse_args()
 
     selected_mode = "check-token" if args.check_token else "dry-run" if args.dry_run else "publish-next"
+    if args.allow_same_day and selected_mode != "publish-next":
+        raise RuntimeError("--allow-same-day can only be used with --publish-next")
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     with LOCK_FILE.open("a+", encoding="utf-8") as lock_file:
         fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
@@ -141,7 +148,11 @@ def main() -> int:
             print(json.dumps(result, ensure_ascii=False, indent=2))
             return 0
 
-        if selected_mode == "publish-next" and LAST_PUBLISH_FILE.exists():
+        if (
+            selected_mode == "publish-next"
+            and not args.allow_same_day
+            and LAST_PUBLISH_FILE.exists()
+        ):
             last_publish = json.loads(LAST_PUBLISH_FILE.read_text(encoding="utf-8"))
             if last_publish.get("date_taipei") == taipei_date():
                 result = {
@@ -173,6 +184,7 @@ def main() -> int:
             "time": now_iso(),
             "started_at": started_at,
             "mode": selected_mode,
+            "same_day_override": bool(args.allow_same_day),
             "post_id": post_id,
             "status": "success",
             "result": result,
