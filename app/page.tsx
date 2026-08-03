@@ -324,31 +324,74 @@ export default function Home() {
 
       <section className="order-contact" id="custom-order">
         <div className="order-contact-copy">
-          <p className="eyebrow">START A CUSTOM ORDER / 03</p>
-          <h2>有想做的款式？<br />直接傳給我們。</h2>
+          <p className="eyebrow">CUSTOM SERVICES / 03</p>
+          <h2>想做自己的版本？<br />請洽詢。</h2>
           <p>
-            把商品名稱、截圖或你的想法傳來，再一起確認尺寸、顏色、數量與授權狀況。
+            可從你的照片、文字或圖案開始，再一起評估造型、尺寸、顏色與適合的製作方式。
           </p>
         </div>
-        <div className="order-contact-options">
-          <a
-            className="contact-card instagram"
-            href="https://www.instagram.com/radish_studio_/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <span>回覆最快</span>
-            <strong>Instagram 私訊</strong>
-            <small>@radish_studio_ ↗</small>
-          </a>
-          <a
-            className="contact-card email"
-            href="mailto:loxa8858@gmail.com?subject=ROBERT%20FORM%20訂製洽詢"
-          >
-            <span>適合完整需求</span>
-            <strong>Email 訂製洽詢</strong>
-            <small>loxa8858@gmail.com ↗</small>
-          </a>
+        <div className="custom-services">
+          <div className="custom-services-heading">
+            <span>可提供的訂製服務</span>
+            <strong>ROBERT FORM · MADE FOR YOU</strong>
+          </div>
+          <div className="service-grid">
+            <article>
+              <span>01</span>
+              <h3>照片轉立體作品</h3>
+              <p>提供清晰照片，可評估轉成浮雕、燈片、輪廓擺件或紀念品。</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>印上姓名與文字</h3>
+              <p>姓名、日期、祝福語、編號或專屬短句，可討論字體與位置。</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Logo、圖案與 QR Code</h3>
+              <p>可提供有使用權的 Logo、圖案或 QR Code，評估浮雕、鏤空或多色呈現。</p>
+            </article>
+            <article>
+              <span>04</span>
+              <h3>顏色、尺寸與用途調整</h3>
+              <p>依空間、物件或使用情境，討論配色、比例、孔位與安裝方式。</p>
+            </article>
+            <article>
+              <span>05</span>
+              <h3>送禮、婚禮與活動小物</h3>
+              <p>可評估少量多款或批量製作，適合送禮、店家、活動與企業客製。</p>
+            </article>
+            <article>
+              <span>06</span>
+              <h3>改圖與打樣評估</h3>
+              <p>有現成檔案或參考圖也可提供，製作前會先確認結構、材料與授權。</p>
+            </article>
+          </div>
+          <div className="inquiry-brief">
+            <strong>洽詢時請提供</strong>
+            <p>參考照片或檔案 · 想印的文字／圖案 · 預期尺寸 · 數量 · 用途 · 希望完成時間</p>
+            <small>照片品質、產品結構與圖樣授權會影響可製作範圍，以實際評估為準。</small>
+          </div>
+          <div className="order-contact-options">
+            <a
+              className="contact-card instagram"
+              href="https://www.instagram.com/radish_studio_/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span>回覆最快</span>
+              <strong>Instagram 私訊</strong>
+              <small>@radish_studio_ ↗</small>
+            </a>
+            <a
+              className="contact-card email"
+              href="mailto:loxa8858@gmail.com?subject=ROBERT%20FORM%20訂製洽詢"
+            >
+              <span>適合完整需求</span>
+              <strong>Email 訂製洽詢</strong>
+              <small>loxa8858@gmail.com ↗</small>
+            </a>
+          </div>
         </div>
       </section>
 

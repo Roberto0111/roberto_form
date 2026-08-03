@@ -37,6 +37,10 @@ test("server-renders the Robert Form catalog and order contacts", async () => {
   assert.match(html, /立即詢問訂製/);
   assert.match(html, /Instagram 私訊/);
   assert.match(html, /Email 訂製洽詢/);
+  assert.match(html, /照片轉立體作品/);
+  assert.match(html, /印上姓名與文字/);
+  assert.match(html, /Logo、圖案與 QR Code/);
+  assert.match(html, /洽詢時請提供/);
   assert.doesNotMatch(html, /<a[^>]+href=["'][^"']*makerworld\.com/i);
 });
 
