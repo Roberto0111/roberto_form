@@ -1,0 +1,8 @@
+[instagram]
+enabled = false
+ig_user_id = "17841466514369754"
+access_token_env = "RADISH_IG_ACCESS_TOKEN"
+api_base_url = "https://graph.instagram.com"
+api_version = "v23.0"
+publish_delay_seconds = 5
+reel_thumb_offset_ms = 1200

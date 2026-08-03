@@ -43,3 +43,10 @@ next-env.d.ts
 
 # local Instagram API credentials
 /social/instagram/api/config.toml
+/social/instagram/api/state/
+/social/instagram/api/logs/
+/social/instagram/api/insights/
+
+# Python caches
+__pycache__/
+*.pyc

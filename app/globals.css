@@ -135,6 +135,8 @@ footer { background: #171717; color: white; padding: 60px 4vw; display: grid; gr
 footer > div { display: flex; align-items: center; gap: 12px; font-size: 22px; }
 footer p { color: #aaa89f; }
 footer a { color: var(--acid); }
+.footer-links { align-items: flex-end; flex-direction: column; gap: 7px; font-size: 13px; }
+.footer-links a { border-bottom: 1px solid rgba(217,255,67,.4); }
 footer small { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15); padding-top: 25px; color: #777; }
 
 @media (max-width: 920px) {
@@ -171,5 +173,6 @@ footer small { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15);
   .process li { grid-template-columns: 38px 1fr; }
   .process li p { grid-column: 2; }
   footer { grid-template-columns: 1fr; }
+  .footer-links { align-items: flex-start; }
   footer small { grid-column: 1; }
 }

@@ -1,0 +1,68 @@
+{
+  "account": "radish_studio_",
+  "posts": [
+    {
+      "id": "01-brand-intro",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/01-brand-intro-reel.mp4",
+      "caption_file": "launch-grid/01-brand-intro-caption.txt"
+    },
+    {
+      "id": "02-moon-lamp",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/02-moon-lamp-reel.mp4",
+      "caption_file": "launch-grid/02-moon-lamp-caption.txt"
+    },
+    {
+      "id": "03-jewelry-tree",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/03-jewelry-tree-reel.mp4",
+      "caption_file": "launch-grid/03-jewelry-tree-caption.txt"
+    },
+    {
+      "id": "04-desk-organizer",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/04-desk-organizer-reel.mp4",
+      "caption_file": "launch-grid/04-desk-organizer-caption.txt"
+    },
+    {
+      "id": "05-japandi-planters",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/05-japandi-planters-reel.mp4",
+      "caption_file": "launch-grid/05-japandi-planters-caption.txt"
+    },
+    {
+      "id": "06-bottle-opener",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/06-bottle-opener-reel.mp4",
+      "caption_file": "launch-grid/06-bottle-opener-caption.txt"
+    },
+    {
+      "id": "07-custom-luggage-tags",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/07-custom-luggage-tags-reel.mp4",
+      "caption_file": "launch-grid/07-custom-luggage-tags-caption.txt"
+    },
+    {
+      "id": "08-chair-sand-adaptors",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/08-chair-sand-adaptors-reel.mp4",
+      "caption_file": "launch-grid/08-chair-sand-adaptors-caption.txt"
+    },
+    {
+      "id": "09-custom-process",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/09-custom-process-reel.mp4",
+      "caption_file": "launch-grid/09-custom-process-caption.txt"
+    }
+  ]
+}

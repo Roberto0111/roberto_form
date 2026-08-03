@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.roberto.radish-studio</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>/Users/roberto/Documents/24小時持續工作/makerworld-catalog/social/instagram/api/run_radish_instagram.sh</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/roberto/Documents/24小時持續工作/makerworld-catalog/social/instagram/api</string>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <!-- Add StartCalendarInterval only after choosing the Radish posting time. -->
+
+  <key>StandardOutPath</key>
+  <string>/Users/roberto/Documents/24小時持續工作/makerworld-catalog/social/instagram/api/logs/launchagent.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/roberto/Documents/24小時持續工作/makerworld-catalog/social/instagram/api/logs/launchagent.err.log</string>
+</dict>
+</plist>

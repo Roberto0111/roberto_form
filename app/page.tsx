@@ -286,7 +286,13 @@ export default function Home() {
               <div><span>02</span><h3>怎麼搭配</h3><p>{categoryNotes[selected.category].styling}</p></div>
               <div><span>03</span><h3>怎麼訂製</h3><p>{categoryNotes[selected.category].custom} 正式製作前會先確認可用授權。</p></div>
             </div>
-            <a className="modal-cta" href="#contact" onClick={() => setSelected(null)}>詢問這件商品 →</a>
+            <a
+              className="modal-cta"
+              href={`mailto:loxa8858@gmail.com?subject=${encodeURIComponent(`ROBERT FORM 訂製洽詢｜${selected.zh}`)}`}
+              onClick={() => setSelected(null)}
+            >
+              詢問這件商品 →
+            </a>
           </article>
         </div>
       )}
@@ -315,7 +321,10 @@ export default function Home() {
       <footer id="contact">
         <div><span className="brand-mark">RF</span><strong>ROBERT FORM</strong></div>
         <p>你的想法，值得被做出來。</p>
-        <a href="mailto:hello@example.com">hello@example.com ↗</a>
+        <div className="footer-links">
+          <a href="https://www.instagram.com/radish_studio_/" target="_blank" rel="noreferrer">Instagram 私訊 ↗</a>
+          <a href="mailto:loxa8858@gmail.com?subject=ROBERT%20FORM%20訂製洽詢">loxa8858@gmail.com ↗</a>
+        </div>
         <small>Curated 3D design inspiration · Licensing checked before production</small>
       </footer>
     </main>
