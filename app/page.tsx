@@ -119,6 +119,9 @@ const products: Product[] = [
 
 const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "收納", "廚房", "寵物", "辦公", "衛浴", "旅行", "戶外"] as const;
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const assetPath = (path: string) => `${basePath}${path}`;
+
 const categoryNotes: Record<Category, { use: string; styling: string; custom: string }> = {
   燈具: { use: "作為床邊、閱讀角或餐桌旁的柔和輔助光，讓造型與光影一起成為焦點。", styling: "搭配木質、亞麻與低彩度牆面，能放大燈罩層次與列印紋理。", custom: "可依空間洽詢燈罩色彩、尺寸與底座搭配，並確認適用燈組。" },
   飾品: { use: "集中展示戒指、手環與項鍊，拿取方便，也讓每天的搭配一目了然。", styling: "放在梳妝台或玄關，以首飾金屬色對比霧面材質，形成精緻層次。", custom: "可洽詢高度、分枝配置、姓名字樣與適合首飾數量的尺寸。" },
@@ -185,9 +188,9 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-collage" aria-label="精選作品">
-          <figure className="hero-main"><img src="/products/lamp-03.webp" alt="繁葉造型燈" /></figure>
-          <figure className="hero-small top"><img src="/products/jewelry-06.webp" alt="首飾樹" /></figure>
-          <figure className="hero-small bottom"><img src="/products/bar-04.webp" alt="啤酒計數開瓶器" /></figure>
+          <figure className="hero-main"><img src={assetPath("/products/lamp-03.webp")} alt="繁葉造型燈" /></figure>
+          <figure className="hero-small top"><img src={assetPath("/products/jewelry-06.webp")} alt="首飾樹" /></figure>
+          <figure className="hero-small bottom"><img src={assetPath("/products/bar-04.webp")} alt="啤酒計數開瓶器" /></figure>
           <span className="orbit-label">FORM · FUNCTION · PLAY ·</span>
         </div>
       </section>
@@ -233,7 +236,7 @@ export default function Home() {
                 onClick={() => setSelected(product)}
                 aria-label={`查看 ${product.zh} 的使用情境`}
               >
-                <img src={product.image} alt={product.zh} loading="lazy" />
+                <img src={assetPath(product.image)} alt={product.zh} loading="lazy" />
                 <span className="view-source">查看使用情境 ↗</span>
                 <span className="index">{String(index + 1).padStart(2, "0")}</span>
               </button>
@@ -265,10 +268,10 @@ export default function Home() {
               <span className="custom-badge">可洽詢顏色與尺寸</span>
             </div>
             <div className="modal-gallery">
-              <figure className="modal-main-image"><img src={selected.image} alt={`${selected.zh} 商品照`} /></figure>
+              <figure className="modal-main-image"><img src={assetPath(selected.image)} alt={`${selected.zh} 商品照`} /></figure>
               {selected.lifestyle ? (
                 <figure className="modal-lifestyle">
-                  <img src={selected.lifestyle} alt={`${selected.zh} 的三種使用與空間搭配情境`} />
+                  <img src={assetPath(selected.lifestyle)} alt={`${selected.zh} 的三種使用與空間搭配情境`} />
                 </figure>
               ) : (
                 <div className="styling-placeholder">
