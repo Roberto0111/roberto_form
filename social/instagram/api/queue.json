@@ -63,6 +63,13 @@
       "media_type": "reel",
       "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/09-custom-process-reel.mp4",
       "caption_file": "launch-grid/09-custom-process-caption.txt"
+    },
+    {
+      "id": "10-entryway-organizer",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/10-entryway-organizer-reel.mp4",
+      "caption_file": "launch-grid/10-entryway-organizer-caption.txt"
     }
   ]
 }
