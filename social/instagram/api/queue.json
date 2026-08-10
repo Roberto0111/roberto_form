@@ -70,6 +70,13 @@
       "media_type": "reel",
       "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/10-entryway-organizer-reel.mp4",
       "caption_file": "launch-grid/10-entryway-organizer-caption.txt"
+    },
+    {
+      "id": "11-camping-spice-rack",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/11-camping-spice-rack-reel.mp4",
+      "caption_file": "launch-grid/11-camping-spice-rack-caption.txt"
     }
   ]
 }
