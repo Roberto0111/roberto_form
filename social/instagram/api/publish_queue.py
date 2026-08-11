@@ -23,6 +23,8 @@ LOG_DIR = HERE / "logs"
 LOCK_FILE = STATE_DIR / "publish.lock"
 LOG_FILE = LOG_DIR / "publish.jsonl"
 LAST_PUBLISH_FILE = STATE_DIR / "last_publish.json"
+STRATEGY_FILE = HERE / "insights" / "daily_strategy.json"
+ADAPTED_CAPTION_DIR = STATE_DIR / "captions"
 EXPECTED_ACCOUNT = "radish_studio_"
 SAFE_ID = re.compile(r"^[A-Za-z0-9._-]+$")
 TAIPEI = ZoneInfo("Asia/Taipei")
@@ -68,12 +70,34 @@ def load_queue() -> list[dict[str, Any]]:
     return posts
 
 
-def next_pending(posts: list[dict[str, Any]]) -> dict[str, Any] | None:
-    for post in posts:
-        post_id = str(post["id"])
-        if post.get("enabled", True) and not (STATE_DIR / f"{post_id}.json").exists():
-            return post
-    return None
+def load_strategy() -> dict[str, Any]:
+    if not STRATEGY_FILE.exists():
+        return {}
+    try:
+        return json.loads(STRATEGY_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError):
+        return {}
+
+
+def pending_posts(posts: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        post
+        for post in posts
+        if post.get("enabled", True)
+        and not (STATE_DIR / f"{str(post['id'])}.json").exists()
+    ]
+
+
+def next_pending(posts: list[dict[str, Any]], strategy: dict[str, Any]) -> dict[str, Any] | None:
+    pending = pending_posts(posts)
+    if not pending:
+        return None
+    priorities = [str(item) for item in strategy.get("priority_post_ids") or []]
+    by_id = {str(post["id"]): post for post in pending}
+    for post_id in priorities:
+        if post_id in by_id:
+            return by_id[post_id]
+    return pending[0]
 
 
 def caption_path(post: dict[str, Any]) -> Path:
@@ -86,7 +110,37 @@ def caption_path(post: dict[str, Any]) -> Path:
     return path
 
 
-def publisher_command(post: dict[str, Any] | None, *, dry_run: bool) -> list[str]:
+def effective_caption_path(post: dict[str, Any], strategy: dict[str, Any]) -> Path:
+    original = caption_path(post)
+    cta_mode = str(strategy.get("format_settings", {}).get("cta") or "dm_keyword")
+    if cta_mode == "dm_keyword":
+        return original
+
+    caption = original.read_text(encoding="utf-8").strip()
+    lines = caption.splitlines()
+    hashtag_index = next(
+        (index for index, line in enumerate(lines) if line.lstrip().startswith("#")),
+        len(lines),
+    )
+    if cta_mode == "share":
+        cta = "傳給最近正在整理空間、找客製禮物，或剛好需要這個解法的人。"
+    else:
+        cta = "先收藏，量尺寸或整理需求時再回來看。"
+    body = lines[:hashtag_index]
+    hashtags = lines[hashtag_index:]
+    adapted = "\n".join([*body, "", cta, "", *hashtags]).strip() + "\n"
+    ADAPTED_CAPTION_DIR.mkdir(parents=True, exist_ok=True)
+    output = ADAPTED_CAPTION_DIR / f"{post['id']}.txt"
+    output.write_text(adapted, encoding="utf-8")
+    return output
+
+
+def publisher_command(
+    post: dict[str, Any] | None,
+    *,
+    dry_run: bool,
+    strategy: dict[str, Any],
+) -> list[str]:
     command = [
         sys.executable,
         str(HERE / "publish_instagram.py"),
@@ -104,15 +158,20 @@ def publisher_command(post: dict[str, Any] | None, *, dry_run: bool) -> list[str
         command.extend(["--reel", "--video-url", str(post["source_url"])])
     else:
         command.extend(["--image-url", str(post["source_url"])])
-    command.extend(["--caption-file", str(caption_path(post))])
+    command.extend(["--caption-file", str(effective_caption_path(post, strategy))])
     if dry_run:
         command.append("--dry-run")
     return command
 
 
-def run_publisher(post: dict[str, Any] | None, *, dry_run: bool) -> dict[str, Any]:
+def run_publisher(
+    post: dict[str, Any] | None,
+    *,
+    dry_run: bool,
+    strategy: dict[str, Any],
+) -> dict[str, Any]:
     completed = subprocess.run(
-        publisher_command(post, dry_run=dry_run),
+        publisher_command(post, dry_run=dry_run, strategy=strategy),
         text=True,
         capture_output=True,
         check=False,
@@ -142,7 +201,8 @@ def main() -> int:
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     with LOCK_FILE.open("a+", encoding="utf-8") as lock_file:
         fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
-        post = None if selected_mode == "check-token" else next_pending(load_queue())
+        strategy = load_strategy()
+        post = None if selected_mode == "check-token" else next_pending(load_queue(), strategy)
         if selected_mode != "check-token" and post is None:
             result = {"skipped": True, "reason": "no_pending_posts"}
             print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -167,7 +227,11 @@ def main() -> int:
         post_id = str(post["id"]) if post else None
         started_at = now_iso()
         try:
-            result = run_publisher(post, dry_run=selected_mode == "dry-run")
+            result = run_publisher(
+                post,
+                dry_run=selected_mode == "dry-run",
+                strategy=strategy,
+            )
         except Exception as error:
             append_log(
                 {
@@ -186,6 +250,7 @@ def main() -> int:
             "mode": selected_mode,
             "same_day_override": bool(args.allow_same_day),
             "post_id": post_id,
+            "growth_strategy": strategy.get("format_settings", {}),
             "status": "success",
             "result": result,
         }

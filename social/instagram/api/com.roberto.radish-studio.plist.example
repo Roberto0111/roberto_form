@@ -8,20 +8,26 @@
   <key>ProgramArguments</key>
   <array>
     <string>/bin/zsh</string>
-    <string>/Users/roberto/Documents/24小時持續工作/makerworld-catalog/social/instagram/api/run_radish_instagram.sh</string>
+    <string>/Users/roberto/Automation/Robert_form/social/instagram/api/run_daily_growth_cycle.sh</string>
   </array>
 
   <key>WorkingDirectory</key>
-  <string>/Users/roberto/Documents/24小時持續工作/makerworld-catalog/social/instagram/api</string>
+  <string>/Users/roberto/Automation/Robert_form/social/instagram/api</string>
 
   <key>RunAtLoad</key>
   <false/>
 
-  <!-- Add StartCalendarInterval only after choosing the Radish posting time. -->
+  <key>StartCalendarInterval</key>
+  <array>
+    <dict><key>Hour</key><integer>19</integer><key>Minute</key><integer>30</integer></dict>
+    <dict><key>Hour</key><integer>20</integer><key>Minute</key><integer>30</integer></dict>
+    <dict><key>Hour</key><integer>21</integer><key>Minute</key><integer>30</integer></dict>
+    <dict><key>Hour</key><integer>22</integer><key>Minute</key><integer>30</integer></dict>
+  </array>
 
   <key>StandardOutPath</key>
-  <string>/Users/roberto/Documents/24小時持續工作/makerworld-catalog/social/instagram/api/logs/launchagent.out.log</string>
+  <string>/Users/roberto/Automation/Robert_form/social/instagram/api/logs/launchagent.out.log</string>
   <key>StandardErrorPath</key>
-  <string>/Users/roberto/Documents/24小時持續工作/makerworld-catalog/social/instagram/api/logs/launchagent.err.log</string>
+  <string>/Users/roberto/Automation/Robert_form/social/instagram/api/logs/launchagent.err.log</string>
 </dict>
 </plist>

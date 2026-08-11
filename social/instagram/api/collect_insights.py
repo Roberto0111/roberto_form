@@ -138,6 +138,103 @@ def choose_posting_time(media_rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def media_summary(media_rows: list[dict[str, Any]]) -> dict[str, float | int]:
+    measurable = [
+        row
+        for row in media_rows
+        if float(row.get("insights", {}).get("views") or 0) > 0
+        or float(row.get("insights", {}).get("reach") or 0) > 0
+    ]
+    totals = {
+        name: sum(float(row.get("insights", {}).get(name) or 0) for row in measurable)
+        for name in ("views", "reach", "saved", "shares", "total_interactions")
+    }
+    watch_times = [
+        float(row.get("insights", {}).get("ig_reels_avg_watch_time") or 0)
+        for row in measurable
+        if float(row.get("insights", {}).get("ig_reels_avg_watch_time") or 0) > 0
+    ]
+    reach = totals["reach"]
+    return {
+        "samples": len(measurable),
+        "avg_views": totals["views"] / len(measurable) if measurable else 0,
+        "avg_reach": reach / len(measurable) if measurable else 0,
+        "interaction_rate": totals["total_interactions"] / reach if reach else 0,
+        "share_rate": totals["shares"] / reach if reach else 0,
+        "save_rate": totals["saved"] / reach if reach else 0,
+        "avg_watch_time_ms": sum(watch_times) / len(watch_times) if watch_times else 0,
+    }
+
+
+def build_growth_strategy(snapshot: dict[str, Any]) -> dict[str, Any]:
+    stats = media_summary(snapshot["media"])
+    account = snapshot.get("account_insights", {})
+    settings: dict[str, Any] = {
+        "hook_seconds": 2.0,
+        "target_seconds": 10,
+        "cta": "dm_keyword",
+    }
+    priority_post_ids: list[str] = []
+    recommendations: list[str] = []
+
+    if stats["samples"] < 5:
+        recommendations.append("可量測內容未滿 5 篇；維持原佇列順序與晚間固定發布，不因單篇數據換風格。")
+        recommendations.append("每篇保留一個可歸因的私訊關鍵字，先建立詢問與成交基準。")
+    else:
+        if 0 < stats["avg_watch_time_ms"] < 3000:
+            settings["hook_seconds"] = 1.5
+            settings["target_seconds"] = 8
+            recommendations.append("平均觀看時間偏短；下一支在 1.5 秒內先展示完成品與用途。")
+        if stats["share_rate"] < 0.005:
+            settings["cta"] = "share"
+            priority_post_ids.extend(
+                ["04-desk-organizer", "08-chair-sand-adaptors", "07-custom-luggage-tags"]
+            )
+            recommendations.append("分享率偏低；優先發布能直接解決日常問題的產品，結尾改成轉傳型 CTA。")
+        if stats["save_rate"] < 0.01:
+            priority_post_ids.extend(["09-custom-process", "07-custom-luggage-tags"])
+            recommendations.append("收藏率偏低；優先尺寸、流程與客製步驟明確的內容。")
+        if float(account.get("profile_links_taps") or 0) == 0:
+            settings["cta"] = "dm_keyword"
+            recommendations.append("近 7 日連結點擊仍為 0；保留具體私訊關鍵字，避免只寫抽象品牌文案。")
+
+    return {
+        "updated_at": snapshot["collected_at"],
+        "account": snapshot["profile"].get("username"),
+        "stats": stats,
+        "recommended_posting_time": snapshot["recommended_posting_time"],
+        "format_settings": settings,
+        "priority_post_ids": list(dict.fromkeys(priority_post_ids)),
+        "recommendations": recommendations,
+    }
+
+
+def render_strategy(strategy: dict[str, Any]) -> str:
+    settings = strategy["format_settings"]
+    stats = strategy["stats"]
+    lines = [
+        "# Robert Form 每日成長策略",
+        "",
+        f"- 更新：{strategy['updated_at']}",
+        f"- 可量測樣本：{stats['samples']}",
+        f"- 建議發布時間：{strategy['recommended_posting_time']['time']}",
+        f"- 下一篇 CTA：{settings['cta']}",
+        f"- 開場目標：{settings['hook_seconds']} 秒",
+        "",
+        "## 下一篇",
+        "",
+        *[f"- {item}" for item in strategy["recommendations"]],
+        "",
+        "## 原則",
+        "",
+        "- 先看分享、收藏、觀看時間與私訊／連結行為，不以按讚數單獨決策。",
+        "- 未滿 5 篇不更換整體視覺系統；產品規格與相容性不得因流量數據改寫。",
+        "- 每日最多發布一篇，既有發布標記必須保留。",
+        "",
+    ]
+    return "\n".join(lines)
+
+
 def render_report(snapshot: dict[str, Any], previous: dict[str, Any] | None) -> str:
     profile = snapshot["profile"]
     followers = int(profile.get("followers_count") or 0)
@@ -274,6 +371,15 @@ def main() -> int:
     )
     report = render_report(snapshot, previous)
     (INSIGHTS_DIR / "latest-report.md").write_text(report, encoding="utf-8")
+    strategy = build_growth_strategy(snapshot)
+    (INSIGHTS_DIR / "daily_strategy.json").write_text(
+        json.dumps(strategy, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    (INSIGHTS_DIR / "daily_strategy.md").write_text(
+        render_strategy(strategy),
+        encoding="utf-8",
+    )
     print(
         json.dumps(
             {
@@ -281,6 +387,7 @@ def main() -> int:
                 "followers": profile.get("followers_count"),
                 "media_count": profile.get("media_count"),
                 "recommended_posting_time": recommendation,
+                "growth_strategy": strategy["format_settings"],
                 "report": str(INSIGHTS_DIR / "latest-report.md"),
             },
             ensure_ascii=False,

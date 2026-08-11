@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import json
 import os
 from pathlib import Path
@@ -12,6 +13,7 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
+from zoneinfo import ZoneInfo
 
 try:
     import tomllib
@@ -20,6 +22,7 @@ except ModuleNotFoundError:  # pragma: no cover - Python 3.10 fallback
 
 
 EXPECTED_USERNAME = "radish_studio_"
+TAIPEI = ZoneInfo("Asia/Taipei")
 
 
 def load_env(path: Path) -> None:
@@ -179,6 +182,41 @@ def wait_until_ready(base: str, version: str, container_id: str, token: str) -> 
     raise RuntimeError("Instagram media processing timed out after 5 minutes")
 
 
+def find_same_day_caption_duplicate(
+    base: str,
+    version: str,
+    user_id: str,
+    token: str,
+    caption: str,
+) -> dict[str, Any] | None:
+    target = " ".join(caption.split())
+    if not target:
+        return None
+    recent = api_request(
+        "GET",
+        f"{base}/{version}/{user_id}/media",
+        token=token,
+        params={
+            "fields": "id,caption,media_type,media_product_type,permalink,timestamp",
+            "limit": 25,
+        },
+    )
+    today = datetime.now(TAIPEI).date()
+    for item in recent.get("data", []):
+        if " ".join(str(item.get("caption") or "").split()) != target:
+            continue
+        raw_timestamp = str(item.get("timestamp") or "")
+        try:
+            published_date = datetime.fromisoformat(
+                raw_timestamp.replace("Z", "+00:00")
+            ).astimezone(TAIPEI).date()
+        except ValueError:
+            continue
+        if published_date == today:
+            return item
+    return None
+
+
 def publish(
     *,
     base: str,
@@ -220,6 +258,21 @@ def publish(
             "media_type": "REELS" if is_reel else "IMAGE",
             "source_url": video_url if is_reel else image_url,
             "caption": caption,
+        }
+
+    duplicate = find_same_day_caption_duplicate(
+        base, version, user_id, token, caption
+    )
+    if duplicate:
+        return {
+            "skipped": True,
+            "reason": "duplicate_caption_today",
+            "username": profile.get("username"),
+            "media_id": duplicate.get("id"),
+            "permalink": duplicate.get("permalink"),
+            "media_type": duplicate.get("media_type"),
+            "media_product_type": duplicate.get("media_product_type"),
+            "timestamp": duplicate.get("timestamp"),
         }
 
     created = api_request("POST", media_url, token=token, params=create_payload)

@@ -38,10 +38,17 @@ That marker prevents a LaunchAgent retry from publishing the same Reel twice.
 ## LaunchAgent staging
 
 `com.roberto.radish-studio.plist.example` mirrors the Mac LaunchAgent approach
-used by the other two projects. It is intentionally not installed and has no
-posting time yet. `run_radish_instagram.sh` publishes one unpublished item from
-`queue.json` per run; a successful post gets a state marker so a retry cannot
-duplicate it.
+used by the other projects. It runs at the supported evening windows; the
+growth cycle reads `insights/best_time.json` and publishes only after the
+account's recommended time. A successful post gets a state marker so retries
+cannot duplicate it, and `last_publish.json` limits scheduled publishing to one
+post per Taipei calendar day.
+
+The installed LaunchAgent uses the production runtime
+`/Users/roberto/Automation/Robert_form`. macOS launchd cannot reliably traverse
+the project's protected `Documents` path after login. Run `deploy_runtime.sh`
+after changing the tracked publisher code; it updates scripts and captions but
+preserves the runtime's `.env`, `config.toml`, state, insights and logs.
 
 Queue checks can be run manually:
 
@@ -60,7 +67,9 @@ caption file are ready.
 `collect_insights.py` records account and media performance under the ignored
 `insights/` folder. It tracks followers, views, reach, interactions, link taps,
 shares, saves, watch time and Reel skip rate when Meta makes the metric
-available. The initial posting time is 20:30 Asia/Taipei; the recommendation is
+available. It also writes `daily_strategy.json` and `daily_strategy.md`. The
+publisher uses those files to select a pending product and adapt the CTA. The
+initial posting time is 20:30 Asia/Taipei; timing and content priority become
 data-driven only after at least five measurable posts.
 
 ```bash
