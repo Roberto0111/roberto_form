@@ -7,10 +7,12 @@ import argparse
 from datetime import datetime, timezone
 import fcntl
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
 import sys
+import unicodedata
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -18,12 +20,19 @@ from zoneinfo import ZoneInfo
 HERE = Path(__file__).resolve().parent
 SOCIAL_DIR = HERE.parent
 QUEUE_FILE = HERE / "queue.json"
-STATE_DIR = HERE / "state"
-LOG_DIR = HERE / "logs"
+SHARED_RUNTIME_API = Path(
+    os.environ.get(
+        "RADISH_RUNTIME_API",
+        "/Users/roberto/Automation/Robert_form/social/instagram/api",
+    )
+)
+STATE_DIR = SHARED_RUNTIME_API / "state"
+LOG_DIR = SHARED_RUNTIME_API / "logs"
 LOCK_FILE = STATE_DIR / "publish.lock"
 LOG_FILE = LOG_DIR / "publish.jsonl"
 LAST_PUBLISH_FILE = STATE_DIR / "last_publish.json"
 STRATEGY_FILE = HERE / "insights" / "daily_strategy.json"
+INSIGHTS_FILE = HERE / "insights" / "latest.json"
 ADAPTED_CAPTION_DIR = STATE_DIR / "captions"
 EXPECTED_ACCOUNT = "radish_studio_"
 SAFE_ID = re.compile(r"^[A-Za-z0-9._-]+$")
@@ -79,17 +88,81 @@ def load_strategy() -> dict[str, Any]:
         return {}
 
 
-def pending_posts(posts: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def caption_opening(caption: str) -> str:
+    for raw_line in caption.splitlines():
+        line = unicodedata.normalize("NFKC", raw_line).strip()
+        if line and not line.startswith("#"):
+            return re.sub(r"\s+", "", line)
+    return ""
+
+
+def remote_post_matches(posts: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    try:
+        report = json.loads(INSIGHTS_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError):
+        return {}
+    remote_by_opening: dict[str, dict[str, Any]] = {}
+    for media in report.get("media") or []:
+        opening = caption_opening(str(media.get("caption") or ""))
+        if len(opening) >= 12:
+            remote_by_opening.setdefault(opening, media)
+
+    matches = {}
+    for post in posts:
+        post_id = str(post["id"])
+        if (STATE_DIR / f"{post_id}.json").exists():
+            continue
+        try:
+            opening = caption_opening(caption_path(post).read_text(encoding="utf-8"))
+        except OSError:
+            continue
+        if len(opening) >= 12 and opening in remote_by_opening:
+            matches[post_id] = remote_by_opening[opening]
+    return matches
+
+
+def write_remote_reconciliation(matches: dict[str, dict[str, Any]]) -> None:
+    for post_id, media in matches.items():
+        marker = STATE_DIR / f"{post_id}.json"
+        if marker.exists():
+            continue
+        event = {
+            "time": now_iso(),
+            "mode": "remote-reconciliation",
+            "post_id": post_id,
+            "status": "reconciled_existing_remote",
+            "result": {
+                "media_id": media.get("id"),
+                "permalink": media.get("permalink"),
+                "timestamp": media.get("timestamp"),
+            },
+        }
+        temporary = marker.with_suffix(".tmp")
+        temporary.write_text(json.dumps(event, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        temporary.replace(marker)
+        append_log(event)
+
+
+def pending_posts(
+    posts: list[dict[str, Any]],
+    remote_matches: dict[str, dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    remote_ids = set((remote_matches or {}).keys())
     return [
         post
         for post in posts
         if post.get("enabled", True)
         and not (STATE_DIR / f"{str(post['id'])}.json").exists()
+        and str(post["id"]) not in remote_ids
     ]
 
 
-def next_pending(posts: list[dict[str, Any]], strategy: dict[str, Any]) -> dict[str, Any] | None:
-    pending = pending_posts(posts)
+def next_pending(
+    posts: list[dict[str, Any]],
+    strategy: dict[str, Any],
+    remote_matches: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, Any] | None:
+    pending = pending_posts(posts, remote_matches)
     if not pending:
         return None
     priorities = [str(item) for item in strategy.get("priority_post_ids") or []]
@@ -140,6 +213,7 @@ def publisher_command(
     *,
     dry_run: bool,
     strategy: dict[str, Any],
+    story: bool = False,
 ) -> list[str]:
     command = [
         sys.executable,
@@ -154,7 +228,10 @@ def publisher_command(
         return command
 
     media_type = str(post["media_type"])
-    if media_type == "reel":
+    if story:
+        source_option = "--video-url" if media_type == "reel" else "--image-url"
+        command.extend(["--story", source_option, str(post["source_url"])])
+    elif media_type == "reel":
         command.extend(["--reel", "--video-url", str(post["source_url"])])
     else:
         command.extend(["--image-url", str(post["source_url"])])
@@ -169,9 +246,10 @@ def run_publisher(
     *,
     dry_run: bool,
     strategy: dict[str, Any],
+    story: bool = False,
 ) -> dict[str, Any]:
     completed = subprocess.run(
-        publisher_command(post, dry_run=dry_run, strategy=strategy),
+        publisher_command(post, dry_run=dry_run, strategy=strategy, story=story),
         text=True,
         capture_output=True,
         check=False,
@@ -202,7 +280,15 @@ def main() -> int:
     with LOCK_FILE.open("a+", encoding="utf-8") as lock_file:
         fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
         strategy = load_strategy()
-        post = None if selected_mode == "check-token" else next_pending(load_queue(), strategy)
+        posts = [] if selected_mode == "check-token" else load_queue()
+        remote_matches = {} if selected_mode == "check-token" else remote_post_matches(posts)
+        if selected_mode == "publish-next":
+            write_remote_reconciliation(remote_matches)
+        post = (
+            None
+            if selected_mode == "check-token"
+            else next_pending(posts, strategy, remote_matches)
+        )
         if selected_mode != "check-token" and post is None:
             result = {"skipped": True, "reason": "no_pending_posts"}
             print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -244,6 +330,28 @@ def main() -> int:
             )
             raise
 
+        story_error = ""
+        if result.get("skipped"):
+            result["story"] = {
+                "status": "skipped",
+                "reason": "feed_duplicate_was_not_republished",
+            }
+        else:
+            try:
+                story_result = run_publisher(
+                    post,
+                    dry_run=selected_mode == "dry-run",
+                    strategy=strategy,
+                    story=True,
+                )
+                result["story"] = {
+                    "status": "dry_run" if selected_mode == "dry-run" else "published",
+                    **story_result,
+                }
+            except Exception as error:
+                story_error = str(error)[:800]
+                result["story"] = {"status": "failed", "error": story_error}
+
         event = {
             "time": now_iso(),
             "started_at": started_at,
@@ -267,6 +375,9 @@ def main() -> int:
                 "date_taipei": taipei_date(),
                 "post_id": post_id,
                 "media_id": result.get("media_id"),
+                "story_media_id": result.get("story", {}).get("media_id"),
+                "story_status": result.get("story", {}).get("status"),
+                "story_error": story_error,
                 "permalink": result.get("permalink"),
                 "published_at": event["time"],
             }

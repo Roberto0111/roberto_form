@@ -7,6 +7,20 @@ RUNTIME_ROOT="/Users/roberto/Automation/Robert_form/social/instagram"
 RUNTIME_API="${RUNTIME_ROOT}/api"
 
 mkdir -p "$RUNTIME_API" "${RUNTIME_ROOT}/launch-grid"
+mkdir -p "${SOURCE_ROOT}/state" "${RUNTIME_API}/state"
+
+# Both the source task and LaunchAgent use the runtime state. Merge old per-post
+# markers first so either entry point remembers everything already published.
+for marker in "${SOURCE_ROOT}"/state/[0-9]*.json; do
+  [[ -e "$marker" ]] || continue
+  target="${RUNTIME_API}/state/${marker:t}"
+  [[ -e "$target" ]] || cp "$marker" "$target"
+done
+for marker in "${RUNTIME_API}"/state/[0-9]*.json; do
+  [[ -e "$marker" ]] || continue
+  target="${SOURCE_ROOT}/state/${marker:t}"
+  [[ -e "$target" ]] || cp "$marker" "$target"
+done
 
 for file in \
   README.md \

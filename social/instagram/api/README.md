@@ -44,6 +44,13 @@ account's recommended time. A successful post gets a state marker so retries
 cannot duplicate it, and `last_publish.json` limits scheduled publishing to one
 post per Taipei calendar day.
 
+The tracked project and the ASCII-path runtime share the runtime lock and state
+directory. `deploy_runtime.sh` refreshes the queue and scripts and merges older
+per-product markers in both directions. Fresh Instagram insights are also
+checked by normalized caption opening before publishing, so a product already
+visible on the account is reconciled and skipped even if a local marker was
+missing.
+
 The installed LaunchAgent uses the production runtime
 `/Users/roberto/Automation/Robert_form`. macOS launchd cannot reliably traverse
 the project's protected `Documents` path after login. Run `deploy_runtime.sh`
@@ -78,5 +85,5 @@ data-driven only after at least five measurable posts.
 ```
 
 The growth cycle checks insights first and publishes at most one queued post
-per Taipei calendar day. Captions use a specific DM keyword so inquiries can be
-attributed to the Reel that generated them.
+plus its matching Story per Taipei calendar day. Captions use a specific DM
+keyword so inquiries can be attributed to the Reel that generated them.

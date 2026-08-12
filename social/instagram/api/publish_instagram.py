@@ -227,6 +227,7 @@ def publish(
     image_url: str | None,
     video_url: str | None,
     is_reel: bool,
+    is_story: bool,
     thumb_offset_ms: int,
     publish_delay_seconds: int,
     dry_run: bool,
@@ -235,7 +236,16 @@ def publish(
     media_url = f"{base}/{version}/{user_id}/media"
     publish_url = f"{base}/{version}/{user_id}/media_publish"
 
-    if is_reel:
+    story_is_video = is_story and bool(video_url)
+    if is_story:
+        if bool(image_url) == bool(video_url):
+            raise RuntimeError("A Story requires exactly one public image or video URL")
+        create_payload = {"media_type": "STORIES"}
+        if video_url:
+            create_payload["video_url"] = video_url
+        else:
+            create_payload["image_url"] = image_url
+    elif is_reel:
         if not video_url:
             raise RuntimeError("A public --video-url is required for a Reel")
         create_payload = {
@@ -255,32 +265,33 @@ def publish(
             "dry_run": True,
             "username": profile.get("username"),
             "media_url": media_url,
-            "media_type": "REELS" if is_reel else "IMAGE",
-            "source_url": video_url if is_reel else image_url,
+            "media_type": "STORIES" if is_story else "REELS" if is_reel else "IMAGE",
+            "source_url": video_url if is_reel or story_is_video else image_url,
             "caption": caption,
         }
 
-    duplicate = find_same_day_caption_duplicate(
-        base, version, user_id, token, caption
-    )
-    if duplicate:
-        return {
-            "skipped": True,
-            "reason": "duplicate_caption_today",
-            "username": profile.get("username"),
-            "media_id": duplicate.get("id"),
-            "permalink": duplicate.get("permalink"),
-            "media_type": duplicate.get("media_type"),
-            "media_product_type": duplicate.get("media_product_type"),
-            "timestamp": duplicate.get("timestamp"),
-        }
+    if not is_story:
+        duplicate = find_same_day_caption_duplicate(
+            base, version, user_id, token, caption
+        )
+        if duplicate:
+            return {
+                "skipped": True,
+                "reason": "duplicate_caption_today",
+                "username": profile.get("username"),
+                "media_id": duplicate.get("id"),
+                "permalink": duplicate.get("permalink"),
+                "media_type": duplicate.get("media_type"),
+                "media_product_type": duplicate.get("media_product_type"),
+                "timestamp": duplicate.get("timestamp"),
+            }
 
     created = api_request("POST", media_url, token=token, params=create_payload)
     container_id = str(created.get("id") or "")
     if not container_id:
         raise RuntimeError("Meta API did not return a media container ID")
 
-    if is_reel:
+    if is_reel or story_is_video:
         wait_until_ready(base, version, container_id, token)
     elif publish_delay_seconds:
         time.sleep(publish_delay_seconds)
@@ -294,6 +305,15 @@ def publish(
     media_id = str(published.get("id") or "")
     if not media_id:
         raise RuntimeError("Meta API did not return a published media ID")
+
+    if is_story:
+        return {
+            "username": profile.get("username"),
+            "media_id": media_id,
+            "permalink": None,
+            "media_type": "STORIES",
+            "timestamp": None,
+        }
 
     recent = api_request(
         "GET",
@@ -322,7 +342,9 @@ def main() -> int:
     parser.add_argument("--caption-file", type=Path)
     parser.add_argument("--image-url")
     parser.add_argument("--video-url")
-    parser.add_argument("--reel", action="store_true")
+    media_mode = parser.add_mutually_exclusive_group()
+    media_mode.add_argument("--reel", action="store_true")
+    media_mode.add_argument("--story", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--check-token", action="store_true")
     args = parser.parse_args()
@@ -350,11 +372,11 @@ def main() -> int:
     if not caption:
         raise RuntimeError("Caption is empty")
 
-    source_url = args.video_url if args.reel else args.image_url
+    source_url = args.video_url if args.reel or (args.story and args.video_url) else args.image_url
     if not source_url:
-        option = "--video-url" if args.reel else "--image-url"
+        option = "--video-url or --image-url" if args.story else "--video-url" if args.reel else "--image-url"
         raise RuntimeError(f"Missing public media URL; use {option}")
-    media_check = verify_public_media(source_url, "video" if args.reel else "image")
+    media_check = verify_public_media(source_url, "video" if args.reel or args.video_url else "image")
 
     result = publish(
         base=base,
@@ -365,6 +387,7 @@ def main() -> int:
         image_url=args.image_url,
         video_url=args.video_url,
         is_reel=args.reel,
+        is_story=args.story,
         thumb_offset_ms=int(config.get("reel_thumb_offset_ms", 1200)),
         publish_delay_seconds=int(config.get("publish_delay_seconds", 5)),
         dry_run=args.dry_run,
