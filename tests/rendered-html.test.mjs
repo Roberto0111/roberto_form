@@ -65,6 +65,11 @@ test("ships 97 unique products and the scheduled Reel batch", async () => {
     "07-custom-luggage-tags-reel.mp4",
     "08-chair-sand-adaptors-reel.mp4",
     "09-custom-process-reel.mp4",
+    "10-entryway-organizer-reel.mp4",
+    "11-camping-spice-rack-reel.mp4",
+    "12-travel-cable-organizer-reel.mp4",
+    "13-bath-towel-hooks-reel.mp4",
+    "14-midcentury-planter-reel.mp4",
   ];
   await Promise.all(
     reelNames.map((name) =>
