@@ -14,6 +14,14 @@ type Product = {
   tag: string;
 };
 
+type PriceEstimate = {
+  material: "PLA" | "PETG";
+  grams: number;
+  hours: number;
+  price: number;
+  partsNote: string;
+};
+
 const products: Product[] = [
   { name: "Large Illuminated Lunar Wall Lamp", zh: "月球發光壁燈", category: "燈具", image: "/products/lamp-01.webp", lifestyle: "/lifestyle/lunar-wall-lamp-scenes.webp", source: "https://makerworld.com/zh/models/2320985-large-illuminated-lunar-wall-lamp-version-2", tag: "氛圍照明" },
   { name: "Moon Lamp with Wavy Stand", zh: "波浪底座月球燈", category: "燈具", image: "/products/lamp-02.webp", lifestyle: "/lifestyle/moon-wavy-scenes.webp", source: "https://makerworld.com/zh/models/1266343-moon-lamp-with-wavy-stand-fuzzy-skin", tag: "桌上燈" },
@@ -134,10 +142,66 @@ const categoryNotes: Record<Category, { use: string; styling: string; custom: st
   戶外: { use: "服務露營、健行、沙灘與野餐情境，讓飲品、椅具與小工具更好使用。", styling: "選擇高辨識度色彩搭配帆布、木質與金屬裝備，兼顧安全與風格。", custom: "可依裝備規格、固定方式與戶外環境洽詢尺寸、色彩及耐候材料。" },
 };
 
+const priceProfiles: Record<Category, { grams: number; handling: number; material: "PLA" | "PETG"; detailHours: number; min: number; max: number }> = {
+  燈具: { grams: 250, handling: 150, material: "PLA", detailHours: 1.6, min: 650, max: 2400 },
+  飾品: { grams: 75, handling: 75, material: "PLA", detailHours: 0.7, min: 200, max: 700 },
+  酒具: { grams: 60, handling: 85, material: "PETG", detailHours: 0.8, min: 250, max: 700 },
+  家居: { grams: 150, handling: 95, material: "PLA", detailHours: 1, min: 450, max: 1500 },
+  植栽: { grams: 210, handling: 110, material: "PETG", detailHours: 0.8, min: 500, max: 1800 },
+  收納: { grams: 170, handling: 100, material: "PLA", detailHours: 1.1, min: 350, max: 1400 },
+  廚房: { grams: 105, handling: 90, material: "PETG", detailHours: 0.8, min: 250, max: 1200 },
+  寵物: { grams: 115, handling: 95, material: "PETG", detailHours: 1, min: 250, max: 1500 },
+  辦公: { grams: 140, handling: 100, material: "PLA", detailHours: 0.9, min: 350, max: 1300 },
+  衛浴: { grams: 90, handling: 90, material: "PETG", detailHours: 0.8, min: 250, max: 1000 },
+  旅行: { grams: 60, handling: 80, material: "PLA", detailHours: 0.7, min: 180, max: 650 },
+  戶外: { grams: 85, handling: 90, material: "PETG", detailHours: 0.8, min: 250, max: 1000 },
+};
+
+const estimatePrice = (product: Product): PriceEstimate => {
+  const profile = priceProfiles[product.category];
+  const nameScore = Array.from(product.name).reduce((total, character) => total + character.charCodeAt(0), 0);
+  let sizeFactor = 0.82 + (nameScore % 7) * 0.06;
+
+  if (/Large|Lush Leaf|Wall Lamp|Infinity|HydroSquare|Automatic Pet Feeder|Self-Filling|Stackable Modular Shelf|Beach Table|Fridge Drawer/.test(product.name)) {
+    sizeFactor *= 1.55;
+  } else if (/Mini|Keychain|Beads|Bracelet|Clip|Tag|Tick|Can Cap|Poop Bag|Toothpaste Squeezer/.test(product.name)) {
+    sizeFactor *= 0.52;
+  } else if (/Organizer|Drawers|Basket|Rack|Shelf|Planter|Bowl|Lamp|Holder|Stand|Box/.test(product.name)) {
+    sizeFactor *= 1.08;
+  }
+
+  let grams = Math.max(8, Math.round((profile.grams * sizeFactor) / 5) * 5);
+  let hours = Math.max(0.3, Math.round((grams / 32 + profile.detailHours) * 10) / 10);
+  let material = profile.material;
+  let partsCost = product.category === "燈具" ? 180 : product.category === "酒具" ? 30 : 0;
+  let partsNote = product.category === "燈具" ? "含基本燈組估算" : product.category === "酒具" ? "含基本五金估算" : "列印本體與基本後處理";
+
+  if (product.name === "Wavy Lamp E27") material = "PETG";
+  if (/HydroSquare|Automatic Pet Feeder/.test(product.name)) {
+    partsCost = 350;
+    partsNote = "含基礎模組估算，規格另確認";
+  }
+  if (product.name === "Super Fast Print Lamp") {
+    grams = 30;
+    hours = 0.9;
+    partsCost = 180;
+  }
+
+  const materialRate = material === "PETG" ? 1.35 : 1.2;
+  const costBasis = grams * materialRate + hours * 18 + profile.handling + partsCost;
+  const roundedPrice = Math.round((costBasis * 1.65) / 50) * 50;
+  const price = Math.min(profile.max, Math.max(profile.min, roundedPrice));
+
+  return { material, grams, hours, price, partsNote };
+};
+
+const formatPrice = (price: number) => `NT$${price.toLocaleString("zh-TW")}`;
+
 export default function Home() {
   const [active, setActive] = useState<(typeof filters)[number]>("全部");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Product | null>(null);
+  const selectedPricing = selected ? estimatePrice(selected) : null;
 
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -160,6 +224,7 @@ export default function Home() {
         </a>
         <nav aria-label="主要導覽">
           <a href="#catalog">選品目錄</a>
+          <a href="#pricing">定價方式</a>
           <a href="#process">訂製流程</a>
           <a href="#about">關於作品</a>
         </nav>
@@ -200,7 +265,7 @@ export default function Home() {
             <p className="eyebrow">THE CATALOGUE / 01</p>
             <h2>尋找你的下一件作品</h2>
           </div>
-          <p>挑選喜歡的商品，點開即可查看使用方式、空間搭配與可訂製方向，全程留在站內瀏覽。</p>
+          <p>挑選喜歡的商品，直接查看標準尺寸參考售價、預估耗材與列印時間，再洽詢顏色、尺寸與授權。</p>
         </div>
 
         <div className="catalog-tools">
@@ -227,7 +292,9 @@ export default function Home() {
         </div>
 
         <div className="product-grid">
-          {shown.map((product, index) => (
+          {shown.map((product, index) => {
+            const pricing = estimatePrice(product);
+            return (
             <article className="product-card" key={`${product.name}-${index}`}>
               <button
                 type="button"
@@ -244,16 +311,20 @@ export default function Home() {
                   <p>{product.category} · {product.tag}</p>
                   <h3>{product.zh}</h3>
                   <span>{product.name}</span>
+                  <div className="product-price">
+                    <strong>{formatPrice(pricing.price)} 起</strong>
+                    <small>約 {pricing.hours} 小時 · {pricing.material} {pricing.grams}g</small>
+                  </div>
                 </div>
-                <span className="custom-badge">可洽詢訂製</span>
+                <span className="custom-badge">標準尺寸估價</span>
               </div>
             </article>
-          ))}
+          )})}
         </div>
         {shown.length === 0 && <p className="empty">找不到符合條件的作品，換個關鍵字試試看。</p>}
       </section>
 
-      {selected && (
+      {selected && selectedPricing && (
         <div className="product-modal" role="dialog" aria-modal="true" aria-label={`${selected.zh} 商品介紹`}>
           <button className="modal-backdrop" onClick={() => setSelected(null)} aria-label="關閉商品介紹" />
           <article className="modal-panel">
@@ -264,7 +335,11 @@ export default function Home() {
                 <h2>{selected.zh}</h2>
                 <span>{selected.name}</span>
               </div>
-              <span className="custom-badge">可洽詢顏色與尺寸</span>
+              <div className="modal-price">
+                <span>標準尺寸參考售價</span>
+                <strong>{formatPrice(selectedPricing.price)} 起</strong>
+                <small>可洽詢顏色與尺寸</small>
+              </div>
             </div>
             <div className="modal-gallery">
               <figure className="modal-main-image"><img src={assetPath(selected.image)} alt={`${selected.zh} 商品照`} /></figure>
@@ -288,6 +363,12 @@ export default function Home() {
               <div><span>02</span><h3>怎麼搭配</h3><p>{categoryNotes[selected.category].styling}</p></div>
               <div><span>03</span><h3>怎麼訂製</h3><p>{categoryNotes[selected.category].custom} 正式製作前會先確認可用授權。</p></div>
             </div>
+            <div className="estimate-panel" aria-label="製作與價格估算">
+              <div><span>預估耗材</span><strong>{selectedPricing.material} {selectedPricing.grams}g</strong></div>
+              <div><span>預估列印</span><strong>約 {selectedPricing.hours} 小時</strong></div>
+              <div><span>價格包含</span><strong>{selectedPricing.partsNote}</strong></div>
+              <p>以標準尺寸、單色與一般層高估算；實際售價會依切片結果、顏色、尺寸、支撐、多色換料、零件與原作商用授權調整。</p>
+            </div>
             <div className="modal-actions">
               <a
                 className="modal-cta instagram"
@@ -300,7 +381,7 @@ export default function Home() {
               </a>
               <a
                 className="modal-cta email"
-                href={`mailto:loxa8858@gmail.com?subject=${encodeURIComponent(`ROBERT FORM 訂製洽詢｜${selected.zh}`)}`}
+                href={`mailto:loxa8858@gmail.com?subject=${encodeURIComponent(`ROBERT FORM 訂製洽詢｜${selected.zh}`)}&body=${encodeURIComponent(`商品：${selected.zh}\n參考售價：${formatPrice(selectedPricing.price)} 起\n預估製作：${selectedPricing.material} ${selectedPricing.grams}g／約 ${selectedPricing.hours} 小時\n\n我想詢問的顏色、尺寸與數量：`)}`}
                 onClick={() => setSelected(null)}
               >
                 Email 詢問 →
@@ -310,9 +391,26 @@ export default function Home() {
         </div>
       )}
 
+      <section className="pricing-section" id="pricing">
+        <div>
+          <p className="eyebrow">FAIR PRICE / 02</p>
+          <h2>不是只算一捲線材，<br />而是算完整製作。</h2>
+        </div>
+        <div className="pricing-explainer">
+          <p>每件售價以標準尺寸的切片需求推估，並參考台灣 3D 列印代工與同類生活選品的公開價帶。目錄價格是接單前的透明起點，正式製作仍會重新切片確認。</p>
+          <ol>
+            <li><span>01</span><strong>材料與耗損</strong><p>PLA／PETG 用量，加計支撐、換色與約 15% 試印耗損。</p></li>
+            <li><span>02</span><strong>機台時間</strong><p>依預估列印時數計入耗電、噴嘴與設備折舊。</p></li>
+            <li><span>03</span><strong>完成工序</strong><p>包含拆支撐、基本修整、品檢與一般包裝。</p></li>
+            <li><span>04</span><strong>市場校正</strong><p>小物不低價傾銷，大件也不直接套用高額代印工時計價。</p></li>
+          </ol>
+          <small>價格不含運費、特殊建模與額外商用授權費；大量製作可依排版與耗材效率另行報價。</small>
+        </div>
+      </section>
+
       <section className="process" id="process">
         <div>
-          <p className="eyebrow">MADE FOR YOU / 02</p>
+          <p className="eyebrow">MADE FOR YOU / 03</p>
           <h2>從喜歡，走到專屬。</h2>
         </div>
         <ol>
@@ -324,7 +422,7 @@ export default function Home() {
 
       <section className="order-contact" id="custom-order">
         <div className="order-contact-copy">
-          <p className="eyebrow">CUSTOM SERVICES / 03</p>
+          <p className="eyebrow">CUSTOM SERVICES / 04</p>
           <h2>想做自己的版本？<br />請洽詢。</h2>
           <p>
             可從你的照片、文字或圖案開始，再一起評估造型、尺寸、顏色與適合的製作方式。
