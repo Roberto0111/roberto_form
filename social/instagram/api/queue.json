@@ -105,6 +105,13 @@
       "media_type": "reel",
       "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/15-keychain-opener-reel.mp4",
       "caption_file": "launch-grid/15-keychain-opener-caption.txt"
+    },
+    {
+      "id": "16-travel-hygiene-kit",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/16-travel-hygiene-kit-reel.mp4",
+      "caption_file": "launch-grid/16-travel-hygiene-kit-caption.txt"
     }
   ]
 }
