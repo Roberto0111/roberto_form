@@ -1,4 +1,28 @@
-// Intentionally empty by default.
-// Add Drizzle tables here when the site actually needs a database.
-// See examples/d1/db/schema.ts for an opt-in example.
-export {};
+import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+export const orders = sqliteTable(
+  "orders",
+  {
+    id: text("id").primaryKey(),
+    createdAt: text("created_at").notNull(),
+    status: text("status").notNull().default("pending_review"),
+    paymentMethod: text("payment_method").notNull(),
+    shippingMethod: text("shipping_method").notNull(),
+    shippingFee: integer("shipping_fee").notNull(),
+    subtotal: integer("subtotal").notNull(),
+    total: integer("total").notNull(),
+    customerName: text("customer_name").notNull(),
+    phone: text("phone").notNull(),
+    email: text("email").notNull(),
+    address: text("address"),
+    storeChain: text("store_chain"),
+    storeName: text("store_name"),
+    storeCode: text("store_code"),
+    note: text("note"),
+    itemsJson: text("items_json").notNull(),
+  },
+  (table) => [
+    index("idx_orders_created_at").on(table.createdAt),
+    index("idx_orders_status").on(table.status),
+  ],
+);

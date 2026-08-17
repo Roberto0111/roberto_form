@@ -17,7 +17,7 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "ROBERT FORM｜3D 列印生活選品",
-  description: "從燈具、飾品到酒具與家居，探索 3D 列印設計、透明參考售價與客製可能。",
+  description: "從燈具、飾品到酒具與家居，探索 3D 列印設計、透明售價、購物車與銀行轉帳訂購。",
   icons: {
     icon: `${basePath}/favicon.svg`,
     shortcut: `${basePath}/favicon.svg`,
@@ -25,13 +25,13 @@ export const metadata: Metadata = {
   openGraph: {
     url: siteUrl,
     title: "ROBERT FORM｜3D 列印生活選品",
-    description: "97 件 3D 列印生活選品，附標準尺寸參考售價、預估耗材與列印時間。",
+    description: "97 件 3D 列印生活選品，附透明參考售價、購物車、銀行轉帳與超商取貨。",
     images: [`${siteUrl}/og.png`],
   },
   twitter: {
     card: "summary_large_image",
     title: "ROBERT FORM｜3D 列印生活選品",
-    description: "97 件 3D 列印生活選品，附標準尺寸參考售價、預估耗材與列印時間。",
+    description: "97 件 3D 列印生活選品，附透明參考售價、購物車、銀行轉帳與超商取貨。",
     images: [`${siteUrl}/og.png`],
   },
 };
