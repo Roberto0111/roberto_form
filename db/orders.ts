@@ -28,6 +28,19 @@ export function ensureOrdersSchema() {
         )`),
         d1.prepare("CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders (created_at)"),
         d1.prepare("CREATE INDEX IF NOT EXISTS idx_orders_status ON orders (status)"),
+        d1.prepare(`CREATE TABLE IF NOT EXISTS order_events (
+          id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+          order_id TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          action TEXT NOT NULL,
+          previous_status TEXT NOT NULL,
+          next_status TEXT NOT NULL,
+          actor_email TEXT NOT NULL,
+          message TEXT,
+          external_id TEXT
+        )`),
+        d1.prepare("CREATE INDEX IF NOT EXISTS idx_order_events_order_id ON order_events (order_id)"),
+        d1.prepare("CREATE INDEX IF NOT EXISTS idx_order_events_created_at ON order_events (created_at)"),
       ]);
       await d1.prepare("PRAGMA optimize").run();
     })().catch((error) => {

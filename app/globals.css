@@ -313,9 +313,18 @@ footer small { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15);
 .orders-admin h1 { margin: 0; font-size: clamp(52px, 7vw, 96px); }
 .orders-admin-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 16px; font-size: 12px; }
 .orders-admin-actions a { border-bottom: 1px solid currentColor; }
-.orders-summary { display: flex; align-items: baseline; gap: 12px; padding: 28px 0; }
-.orders-summary strong { font-size: 42px; }
-.orders-summary span { color: #77746c; }
+.orders-setup-warning { display: flex; justify-content: space-between; gap: 18px; margin-top: 28px; padding: 17px 20px; background: #fff0cd; border: 1px solid #e5bd63; font-size: 12px; }
+.orders-setup-warning span { color: #6f5b32; }
+.orders-notice { position: sticky; z-index: 5; top: 12px; display: flex; justify-content: space-between; gap: 15px; margin-top: 16px; padding: 15px 18px; border: 1px solid var(--line); background: white; box-shadow: 0 10px 30px rgba(0,0,0,.08); font-size: 12px; }
+.orders-notice.success { border-color: #8cab23; }
+.orders-notice.error { border-color: #d85d4b; }
+.orders-notice button { border: 0; background: transparent; cursor: pointer; font-size: 18px; }
+.orders-overview { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 28px 0; }
+.orders-overview button { display: grid; justify-items: start; gap: 4px; min-height: 82px; padding: 14px 16px; border: 1px solid var(--line); background: transparent; cursor: pointer; text-align: left; }
+.orders-overview button.active { background: var(--ink); color: white; }
+.orders-overview strong { font-size: 26px; }
+.orders-overview span { color: #77746c; font-size: 10px; }
+.orders-overview button.active span { color: #c7c4bb; }
 .orders-list { display: grid; gap: 14px; }
 .order-record { padding: 25px; border: 1px solid var(--line); background: white; }
 .order-record-head { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
@@ -323,12 +332,28 @@ footer small { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15);
 .order-record-head span, .order-record-grid span { color: #77746c; font-size: 10px; letter-spacing: .08em; }
 .order-record-head time { color: #77746c; font-size: 11px; }
 .order-status { padding: 7px 10px; border-radius: 999px; background: var(--acid); color: var(--ink) !important; }
+.order-status.awaiting_transfer { background: #ffd37d; }
+.order-status.paid, .order-status.producing { background: #b8dfff; }
+.order-status.shipped, .order-status.completed { background: #bde8c8; }
+.order-status.cancelled { background: #e1dfd8; }
 .order-record-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 22px 0; }
 .order-record-grid > div { display: grid; align-content: start; gap: 7px; }
 .order-record-grid p { margin: 0; color: #65625b; font-size: 12px; line-height: 1.65; }
 .order-items { list-style: none; margin: 0; padding: 14px 0; border-top: 1px solid var(--line); }
 .order-items li { display: flex; justify-content: space-between; gap: 20px; padding: 5px 0; font-size: 12px; }
 .order-note { margin: 10px 0 0; padding: 13px; background: #eeeae1; font-size: 12px; }
+.order-workflow { display: grid; gap: 13px; margin-top: 16px; padding-top: 17px; border-top: 1px solid var(--line); }
+.order-workflow > div > span { display: block; margin-bottom: 9px; color: #77746c; font-size: 10px; letter-spacing: .08em; }
+.order-action-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.order-action-buttons button, .order-action-buttons a { border: 1px solid var(--ink); background: transparent; color: var(--ink); padding: 10px 13px; cursor: pointer; font-size: 11px; font-weight: 750; }
+.order-action-buttons button.primary { border-color: var(--ink); background: var(--ink); color: var(--acid); }
+.order-action-buttons button.danger { border-color: #b75b4d; color: #9f3f32; }
+.order-action-buttons button:disabled { cursor: not-allowed; opacity: .38; }
+.order-workflow details { padding: 12px 14px; background: #f2efe7; font-size: 11px; }
+.order-workflow summary { cursor: pointer; font-weight: 750; }
+.order-workflow ol { display: grid; gap: 8px; margin: 12px 0 0; padding-left: 20px; }
+.order-workflow li { padding-left: 4px; }
+.order-workflow li time { display: inline-block; min-width: 150px; color: #77746c; }
 .orders-empty { padding: 70px 0; text-align: center; color: #77746c; }
 .orders-admin.denied { display: grid; align-content: center; max-width: 900px; }
 .orders-admin.denied h1 { font-size: clamp(42px, 6vw, 74px); }
@@ -413,6 +438,9 @@ footer small { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15);
   .order-record-head { grid-template-columns: 1fr auto; }
   .order-record-head time { grid-column: 1 / -1; }
   .order-record-grid { grid-template-columns: 1fr; }
+  .orders-setup-warning { flex-direction: column; }
+  .orders-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .order-workflow li time { display: block; min-width: 0; margin-bottom: 3px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

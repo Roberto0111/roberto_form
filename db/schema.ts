@@ -26,3 +26,22 @@ export const orders = sqliteTable(
     index("idx_orders_status").on(table.status),
   ],
 );
+
+export const orderEvents = sqliteTable(
+  "order_events",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    orderId: text("order_id").notNull(),
+    createdAt: text("created_at").notNull(),
+    action: text("action").notNull(),
+    previousStatus: text("previous_status").notNull(),
+    nextStatus: text("next_status").notNull(),
+    actorEmail: text("actor_email").notNull(),
+    message: text("message"),
+    externalId: text("external_id"),
+  },
+  (table) => [
+    index("idx_order_events_order_id").on(table.orderId),
+    index("idx_order_events_created_at").on(table.createdAt),
+  ],
+);

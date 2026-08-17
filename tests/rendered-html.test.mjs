@@ -30,6 +30,22 @@ test("creates stable direct links for every product", async () => {
   assert.match(catalog, /replace\(\/\[\^a-z0-9\]\+\/g, "-"\)/);
 });
 
+test("protects and supports the complete order workflow", async () => {
+  const manager = await readFile(new URL("../app/orders/order-manager.tsx", import.meta.url), "utf8");
+  const adminRoute = await readFile(new URL("../app/api/orders/[id]/route.ts", import.meta.url), "utf8");
+  const email = await readFile(new URL("../lib/order-email.ts", import.meta.url), "utf8");
+  const workflow = await readFile(new URL("../lib/order-workflow.ts", import.meta.url), "utf8");
+  assert.match(workflow, /確認訂單並寄 Email/);
+  assert.match(workflow, /標記已收款/);
+  assert.match(workflow, /開始製作/);
+  assert.match(workflow, /標記已出貨/);
+  assert.match(manager, /處理紀錄/);
+  assert.match(adminRoute, /ORDER_ADMIN_EMAIL/);
+  assert.match(adminRoute, /sendOrderConfirmationEmail/);
+  assert.match(email, /Idempotency-Key/);
+  assert.match(email, /https:\/\/api\.resend\.com\/emails/);
+});
+
 test("ships 97 unique products and the scheduled Reel batch", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const catalog = await readFile(new URL("../lib/catalog.ts", import.meta.url), "utf8");
