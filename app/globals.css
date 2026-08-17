@@ -101,8 +101,11 @@ h1 { font-size: clamp(60px, 7.7vw, 120px); line-height: .9; letter-spacing: -.08
 .product-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 7px 12px; margin-top: 13px; }
 .product-price strong { color: var(--acid); font-size: 20px; letter-spacing: -.035em; }
 .product-price small { color: #aaa89f; font-size: 10px; }
-.add-cart-button { margin-top: 14px; border: 1px solid rgba(217,255,67,.45); background: transparent; color: var(--acid); padding: 10px 13px; cursor: pointer; font-size: 11px; font-weight: 750; transition: .2s ease; }
+.product-card-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.add-cart-button, .share-product-button { border: 1px solid rgba(217,255,67,.45); background: transparent; color: var(--acid); padding: 10px 13px; cursor: pointer; font-size: 11px; font-weight: 750; transition: .2s ease; }
 .add-cart-button:hover { background: var(--acid); color: var(--ink); }
+.share-product-button { border-color: rgba(255,255,255,.28); color: #e7e4da; }
+.share-product-button:hover { border-color: white; color: white; }
 .empty { padding: 70px 0; text-align: center; color: #aaa89f; }
 
 .product-modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 24px; }
@@ -144,6 +147,7 @@ h1 { font-size: clamp(60px, 7.7vw, 120px); line-height: .9; letter-spacing: -.08
 .modal-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
 .modal-cta { display: inline-flex; padding: 15px 20px; font-weight: 750; }
 .modal-cta.add { border: 0; background: var(--acid); color: var(--ink); cursor: pointer; }
+.modal-cta.share { border: 1px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
 .modal-cta.instagram { background: var(--orange); color: var(--ink); }
 .modal-cta.email { background: var(--ink); color: white; }
 

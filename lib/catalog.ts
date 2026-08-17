@@ -18,6 +18,14 @@ export type PriceEstimate = {
   partsNote: string;
 };
 
+export const productSlug = (product: Product) =>
+  product.name
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 export const products: Product[] = [
   { name: "Large Illuminated Lunar Wall Lamp", zh: "月球發光壁燈", category: "燈具", image: "/products/lamp-01.webp", lifestyle: "/lifestyle/lunar-wall-lamp-scenes.webp", source: "https://makerworld.com/zh/models/2320985-large-illuminated-lunar-wall-lamp-version-2", tag: "氛圍照明" },
   { name: "Moon Lamp with Wavy Stand", zh: "波浪底座月球燈", category: "燈具", image: "/products/lamp-02.webp", lifestyle: "/lifestyle/moon-wavy-scenes.webp", source: "https://makerworld.com/zh/models/1266343-moon-lamp-with-wavy-stand-fuzzy-skin", tag: "桌上燈" },
@@ -172,4 +180,3 @@ export const estimatePrice = (product: Product): PriceEstimate => {
 };
 
 export const formatPrice = (price: number) => `NT$${price.toLocaleString("zh-TW")}`;
-

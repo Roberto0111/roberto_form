@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { estimatePrice, formatPrice, products, type Category, type Product } from "@/lib/catalog";
+import { estimatePrice, formatPrice, products, productSlug, type Category, type Product } from "@/lib/catalog";
 
 const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "收納", "廚房", "寵物", "辦公", "衛浴", "旅行", "戶外"] as const;
 
@@ -51,6 +51,7 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const [createdOrder, setCreatedOrder] = useState<CreatedOrder | null>(null);
+  const [copiedProduct, setCopiedProduct] = useState("");
   const selectedPricing = selected ? estimatePrice(selected) : null;
 
   useEffect(() => {
@@ -68,6 +69,17 @@ export default function Home() {
     if (cartReady) window.localStorage.setItem("robert-form-cart", JSON.stringify(cart));
   }, [cart, cartReady]);
 
+  useEffect(() => {
+    const selectProductFromUrl = () => {
+      const slug = new URLSearchParams(window.location.search).get("product");
+      setSelected(slug ? products.find((product) => productSlug(product) === slug) ?? null : null);
+    };
+
+    selectProductFromUrl();
+    window.addEventListener("popstate", selectProductFromUrl);
+    return () => window.removeEventListener("popstate", selectProductFromUrl);
+  }, []);
+
   const cartLines = useMemo(() => cart.flatMap((item) => {
     const product = products[item.productIndex];
     if (!product) return [];
@@ -77,6 +89,35 @@ export default function Home() {
   const cartSubtotal = cartLines.reduce((sum, item) => sum + item.pricing.price * item.quantity, 0);
   const checkoutTotal = cartSubtotal + shippingFees[shippingMethod];
 
+  const openProduct = (product: Product) => {
+    setSelected(product);
+    const url = new URL(window.location.href);
+    url.searchParams.set("product", productSlug(product));
+    window.history.pushState({}, "", url);
+  };
+
+  const closeProduct = () => {
+    setSelected(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("product");
+    window.history.replaceState({}, "", url);
+  };
+
+  const copyProductLink = async (product: Product) => {
+    const url = new URL(window.location.href);
+    url.hash = "";
+    url.search = "";
+    url.searchParams.set("product", productSlug(product));
+
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      setCopiedProduct(productSlug(product));
+      window.setTimeout(() => setCopiedProduct(""), 2200);
+    } catch {
+      window.prompt("複製這個商品連結", url.toString());
+    }
+  };
+
   const addToCart = (product: Product) => {
     const productIndex = products.indexOf(product);
     setCart((current) => {
@@ -84,7 +125,7 @@ export default function Home() {
       if (existing) return current.map((item) => item.productIndex === productIndex ? { ...item, quantity: Math.min(20, item.quantity + 1) } : item);
       return [...current, { productIndex, quantity: 1 }];
     });
-    setSelected(null);
+    closeProduct();
     setCartOpen(true);
   };
 
@@ -237,7 +278,7 @@ export default function Home() {
               <button
                 type="button"
                 className="product-image"
-                onClick={() => setSelected(product)}
+                onClick={() => openProduct(product)}
                 aria-label={`查看 ${product.zh} 的使用情境`}
               >
                 <img src={assetPath(product.image)} alt={product.zh} loading="lazy" />
@@ -253,7 +294,12 @@ export default function Home() {
                     <strong>{formatPrice(pricing.price)} 起</strong>
                     <small>約 {pricing.hours} 小時 · {pricing.material} {pricing.grams}g</small>
                   </div>
-                  <button className="add-cart-button" type="button" onClick={() => addToCart(products[productIndex])}>加入購物車 ＋</button>
+                  <div className="product-card-actions">
+                    <button className="add-cart-button" type="button" onClick={() => addToCart(products[productIndex])}>加入購物車 ＋</button>
+                    <button className="share-product-button" type="button" onClick={() => copyProductLink(product)}>
+                      {copiedProduct === productSlug(product) ? "連結已複製 ✓" : "複製商品連結 ↗"}
+                    </button>
+                  </div>
                 </div>
                 <span className="custom-badge">標準尺寸估價</span>
               </div>
@@ -265,9 +311,9 @@ export default function Home() {
 
       {selected && selectedPricing && (
         <div className="product-modal" role="dialog" aria-modal="true" aria-label={`${selected.zh} 商品介紹`}>
-          <button className="modal-backdrop" onClick={() => setSelected(null)} aria-label="關閉商品介紹" />
+          <button className="modal-backdrop" onClick={closeProduct} aria-label="關閉商品介紹" />
           <article className="modal-panel">
-            <button className="modal-close" onClick={() => setSelected(null)} aria-label="關閉">×</button>
+            <button className="modal-close" onClick={closeProduct} aria-label="關閉">×</button>
             <div className="modal-heading">
               <div>
                 <p className="eyebrow">{selected.category} · {selected.tag}</p>
@@ -312,19 +358,22 @@ export default function Home() {
               <button className="modal-cta add" type="button" onClick={() => addToCart(selected)}>
                 加入購物車 ＋
               </button>
+              <button className="modal-cta share" type="button" onClick={() => copyProductLink(selected)}>
+                {copiedProduct === productSlug(selected) ? "商品連結已複製 ✓" : "複製商品連結 ↗"}
+              </button>
               <a
                 className="modal-cta instagram"
                 href="https://www.instagram.com/radish_studio_/"
                 target="_blank"
                 rel="noreferrer"
-                onClick={() => setSelected(null)}
+                onClick={closeProduct}
               >
                 Instagram 私訊這件商品 ↗
               </a>
               <a
                 className="modal-cta email"
                 href={`mailto:loxa8858@gmail.com?subject=${encodeURIComponent(`ROBERT FORM 訂製洽詢｜${selected.zh}`)}&body=${encodeURIComponent(`商品：${selected.zh}\n參考售價：${formatPrice(selectedPricing.price)} 起\n預估製作：${selectedPricing.material} ${selectedPricing.grams}g／約 ${selectedPricing.hours} 小時\n\n我想詢問的顏色、尺寸與數量：`)}`}
-                onClick={() => setSelected(null)}
+                onClick={closeProduct}
               >
                 Email 詢問 →
               </a>

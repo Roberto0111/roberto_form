@@ -19,7 +19,15 @@ test("includes the Robert Form catalog, checkout, and order contacts", async () 
   assert.match(page, /送出訂單，等待確認/);
   assert.match(page, /超商門市取貨/);
   assert.match(page, /綠界線上付款/);
+  assert.match(page, /複製商品連結/);
+  assert.match(page, /searchParams\.set\("product"/);
   assert.doesNotMatch(page, /<a[^>]+href=["'][^"']*makerworld\.com/i);
+});
+
+test("creates stable direct links for every product", async () => {
+  const catalog = await readFile(new URL("../lib/catalog.ts", import.meta.url), "utf8");
+  assert.match(catalog, /export const productSlug/);
+  assert.match(catalog, /replace\(\/\[\^a-z0-9\]\+\/g, "-"\)/);
 });
 
 test("ships 97 unique products and the scheduled Reel batch", async () => {
