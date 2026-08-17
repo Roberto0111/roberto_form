@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import Link from "next/link";
 import { estimatePrice, formatPrice, products, productSlug, type Category, type Product } from "@/lib/catalog";
 
 const filters = ["全部", "燈具", "飾品", "酒具", "家居", "植栽", "收納", "廚房", "寵物", "辦公", "衛浴", "旅行", "戶外"] as const;
@@ -34,6 +35,7 @@ type CreatedOrder = {
     shippingMethod: ShippingMethod;
   };
   bank: { name: string; code: string; branch: string; account: string; holder: string };
+  trackingPath: string;
   message: string;
 };
 
@@ -55,14 +57,18 @@ export default function Home() {
   const selectedPricing = selected ? estimatePrice(selected) : null;
 
   useEffect(() => {
+    let savedCart: CartItem[] = [];
     try {
       const saved = window.localStorage.getItem("robert-form-cart");
-      if (saved) setCart(JSON.parse(saved) as CartItem[]);
+      if (saved) savedCart = JSON.parse(saved) as CartItem[];
     } catch {
       window.localStorage.removeItem("robert-form-cart");
-    } finally {
-      setCartReady(true);
     }
+    const timer = window.setTimeout(() => {
+      setCart(savedCart);
+      setCartReady(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -202,6 +208,7 @@ export default function Home() {
           <a href="#payment">付款配送</a>
           <a href="#process">訂製流程</a>
           <a href="#about">關於作品</a>
+          <Link href="/track">查詢訂單</Link>
         </nav>
         <div className="header-actions">
           <button className="cart-trigger" type="button" onClick={() => setCartOpen(true)} aria-label={`開啟購物車，目前 ${cartCount} 件商品`}>
@@ -525,6 +532,7 @@ export default function Home() {
         <div className="footer-links">
           <a href="https://www.instagram.com/radish_studio_/" target="_blank" rel="noreferrer">Instagram 私訊 ↗</a>
           <a href="mailto:loxa8858@gmail.com?subject=ROBERT%20FORM%20訂製洽詢">loxa8858@gmail.com ↗</a>
+          <Link href="/track">買家訂單查詢 ↗</Link>
           <a href="/orders">店家訂單管理 ↗</a>
         </div>
         <small>Curated 3D design inspiration · Licensing checked before production</small>
@@ -571,19 +579,13 @@ export default function Home() {
                 <h2>訂單已送出</h2>
                 <p>{createdOrder.message}</p>
                 <div className="order-number"><span>訂單編號</span><strong>{createdOrder.order.id}</strong></div>
-                <div className="bank-details">
-                  <p>店家確認後使用以下帳戶轉帳</p>
-                  <dl>
-                    <div><dt>銀行</dt><dd>{createdOrder.bank.name}（{createdOrder.bank.code}）</dd></div>
-                    <div><dt>分行</dt><dd>{createdOrder.bank.branch}</dd></div>
-                    <div><dt>帳號</dt><dd>{createdOrder.bank.account}</dd></div>
-                    <div><dt>戶名</dt><dd>{createdOrder.bank.holder}</dd></div>
-                    <div><dt>預估總額</dt><dd>{formatPrice(createdOrder.order.total)}</dd></div>
-                  </dl>
-                  <button type="button" onClick={() => navigator.clipboard?.writeText(createdOrder.bank.account)}>複製轉帳帳號</button>
+                <div className="order-status-entry">
+                  <span>接下來請從專屬頁面操作</span>
+                  <strong>店家確認後，頁面會顯示轉帳資料；轉帳完成也直接在頁面回報。</strong>
+                  <Link href={createdOrder.trackingPath}>查看訂單進度與付款 →</Link>
                 </div>
-                <p className="payment-reminder">請先等待店家透過 Email 或 IG 確認最終金額。轉帳後請回覆訂單編號與帳號末五碼，核帳完成才會排入製作。</p>
-                <div className="success-actions"><a href="https://www.instagram.com/radish_studio_/" target="_blank" rel="noreferrer">IG 回報轉帳 ↗</a><a href={`mailto:loxa8858@gmail.com?subject=${encodeURIComponent(`ROBERT FORM 轉帳回報｜${createdOrder.order.id}`)}&body=${encodeURIComponent(`訂單編號：${createdOrder.order.id}\n轉帳帳號末五碼：\n`)}`}>Email 回報 →</a></div>
+                <p className="payment-reminder">請保存訂單編號與專屬連結。若連結遺失，可使用訂單編號與下單 Email 重新查詢。</p>
+                <div className="success-actions"><button type="button" onClick={() => navigator.clipboard?.writeText(new URL(createdOrder.trackingPath, window.location.origin).toString())}>複製進度連結</button><a href="https://www.instagram.com/radish_studio_/" target="_blank" rel="noreferrer">需要協助？IG 私訊 ↗</a></div>
               </div>
             ) : (
               <form className="checkout-form" onSubmit={submitOrder}>

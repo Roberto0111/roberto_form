@@ -1,4 +1,4 @@
-import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export const orders = sqliteTable(
   "orders",
@@ -20,10 +20,24 @@ export const orders = sqliteTable(
     storeCode: text("store_code"),
     note: text("note"),
     itemsJson: text("items_json").notNull(),
+    accessToken: text("access_token"),
+    transferLastFive: text("transfer_last_five"),
+    transferDate: text("transfer_date"),
+    transferAmount: integer("transfer_amount"),
+    transferNote: text("transfer_note"),
+    transferReportedAt: text("transfer_reported_at"),
+    paymentReceivedAt: text("payment_received_at"),
+    productionStartedAt: text("production_started_at"),
+    shippedAt: text("shipped_at"),
+    completedAt: text("completed_at"),
+    carrier: text("carrier"),
+    trackingNumber: text("tracking_number"),
+    trackingUrl: text("tracking_url"),
   },
   (table) => [
     index("idx_orders_created_at").on(table.createdAt),
     index("idx_orders_status").on(table.status),
+    uniqueIndex("idx_orders_access_token").on(table.accessToken),
   ],
 );
 

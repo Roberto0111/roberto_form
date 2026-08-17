@@ -95,6 +95,7 @@ export async function POST(request: Request) {
   const shippingFee = SHIPPING_FEES[shippingMethod];
   const total = subtotal + shippingFee;
   const id = createOrderId();
+  const accessToken = crypto.randomUUID().replaceAll("-", "");
   const createdAt = new Date().toISOString();
 
   try {
@@ -117,6 +118,7 @@ export async function POST(request: Request) {
       storeCode: shippingMethod === "cvs" ? storeCode : null,
       note: note || null,
       itemsJson: JSON.stringify(lineItems),
+      accessToken,
     });
   } catch (error) {
     console.error("Unable to create order", error);
@@ -125,6 +127,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     order: { id, createdAt, subtotal, shippingFee, total, shippingMethod, items: lineItems },
+    trackingPath: `/track/${accessToken}`,
     bank: {
       name: process.env.BANK_NAME ?? "",
       code: process.env.BANK_CODE ?? "",

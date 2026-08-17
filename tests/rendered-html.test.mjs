@@ -36,7 +36,7 @@ test("protects and supports the complete order workflow", async () => {
   const email = await readFile(new URL("../lib/order-email.ts", import.meta.url), "utf8");
   const workflow = await readFile(new URL("../lib/order-workflow.ts", import.meta.url), "utf8");
   assert.match(workflow, /確認訂單並寄 Email/);
-  assert.match(workflow, /標記已收款/);
+  assert.match(workflow, /確認已入帳/);
   assert.match(workflow, /開始製作/);
   assert.match(workflow, /標記已出貨/);
   assert.match(manager, /處理紀錄/);
@@ -45,7 +45,26 @@ test("protects and supports the complete order workflow", async () => {
   assert.match(adminRoute, /ORDER_ADMIN_EMAIL/);
   assert.match(adminRoute, /sendOrderConfirmationEmail/);
   assert.match(email, /Idempotency-Key/);
+  assert.match(email, /https:\/\/api\.brevo\.com\/v3\/smtp\/email/);
   assert.match(email, /https:\/\/api\.resend\.com\/emails/);
+});
+
+test("gives buyers a private order page, transfer report, and shipment tracking", async () => {
+  const checkoutRoute = await readFile(new URL("../app/api/orders/route.ts", import.meta.url), "utf8");
+  const statusRoute = await readFile(new URL("../app/api/order-status/[token]/route.ts", import.meta.url), "utf8");
+  const lookupRoute = await readFile(new URL("../app/api/order-status/lookup/route.ts", import.meta.url), "utf8");
+  const buyerPage = await readFile(new URL("../app/track/order-status-view.tsx", import.meta.url), "utf8");
+  const manager = await readFile(new URL("../app/orders/order-manager.tsx", import.meta.url), "utf8");
+  assert.match(checkoutRoute, /accessToken/);
+  assert.match(checkoutRoute, /trackingPath/);
+  assert.match(statusRoute, /transferLastFive/);
+  assert.match(statusRoute, /payment_review/);
+  assert.match(lookupRoute, /orders\.email/);
+  assert.match(buyerPage, /訂單進度/);
+  assert.match(buyerPage, /我已完成轉帳/);
+  assert.match(buyerPage, /前往官方物流查詢/);
+  assert.match(manager, /確認出貨並公開物流資訊/);
+  assert.match(manager, /開啟專屬訂單頁/);
 });
 
 test("ships 97 unique products and the scheduled Reel batch", async () => {

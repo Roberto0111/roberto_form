@@ -1,0 +1,14 @@
+ALTER TABLE `orders` ADD `access_token` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `transfer_last_five` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `transfer_date` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `transfer_amount` integer;--> statement-breakpoint
+ALTER TABLE `orders` ADD `transfer_note` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `transfer_reported_at` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `payment_received_at` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `production_started_at` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `shipped_at` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `completed_at` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `carrier` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `tracking_number` text;--> statement-breakpoint
+ALTER TABLE `orders` ADD `tracking_url` text;--> statement-breakpoint
+CREATE UNIQUE INDEX `idx_orders_access_token` ON `orders` (`access_token`);
