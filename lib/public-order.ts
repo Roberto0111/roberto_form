@@ -68,6 +68,15 @@ export function serializePublicOrder(order: OrderRow, events: OrderEventRow[]): 
     at: eventTimes.get(stage.key) ?? null,
     state: status === "cancelled" ? "cancelled" : index < currentIndex ? "complete" : index === currentIndex ? "current" : "upcoming",
   }));
+  if (!order.transferReportedAt) {
+    const transferStage = timeline.find((stage) => stage.key === "transfer");
+    if (transferStage) {
+      transferStage.label = "款項核對";
+      transferStage.description = ["paid", "producing", "shipped", "completed"].includes(status)
+        ? "店家已由銀行入帳紀錄直接確認款項。"
+        : "等待買家回報轉帳，或由店家直接核對入帳。";
+    }
+  }
 
   const showBank = status === "awaiting_transfer" || status === "payment_review";
   const carrier = order.carrier ?? "";

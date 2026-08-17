@@ -50,7 +50,7 @@ type AdminEvent = {
 };
 
 const actionsByStatus: Record<OrderStatus, OrderActionName[]> = {
-  pending_review: ["confirm", "confirm_manual", "cancel"],
+  pending_review: ["confirm", "confirm_manual", "mark_paid", "cancel"],
   awaiting_transfer: ["mark_paid", "resend_confirmation", "cancel"],
   payment_review: ["mark_paid", "request_transfer_again", "cancel"],
   paid: ["start_production", "cancel"],
@@ -90,6 +90,7 @@ export default function OrderManager({ initialOrders, initialEvents, emailConfig
 
   const performAction = async (order: AdminOrder, actionName: OrderActionName, extra: Record<string, string> = {}) => {
     if (actionName === "cancel" && !window.confirm(`確定要取消訂單 ${order.id}？`)) return;
+    if (actionName === "mark_paid" && !window.confirm(`確認訂單 ${order.id} 已收到 ${formatPrice(order.total)}？確認後買家進度會立即更新。`)) return;
     setBusyOrder(order.id);
     setNotice(null);
     try {
@@ -134,6 +135,7 @@ export default function OrderManager({ initialOrders, initialEvents, emailConfig
             trackingNumber: "",
             trackingUrl: "",
           };
+          const canConfirmPayment = status === "pending_review" || status === "awaiting_transfer" || status === "payment_review";
           return (
             <article className="order-record" key={order.id}>
               <div className="order-record-head">
@@ -146,6 +148,10 @@ export default function OrderManager({ initialOrders, initialEvents, emailConfig
                 <div><span>配送</span><strong>{order.shippingMethod === "cvs" ? "超商取貨" : "宅配"}</strong><p>{destination}</p></div>
                 <div><span>款項</span><strong>{formatPrice(order.total)}</strong><p>{paymentNote[status]}</p></div>
               </div>
+              {canConfirmPayment && <section className={`payment-confirm-panel ${status === "payment_review" ? "reported" : ""}`}>
+                <div><span>銀行款項確認</span><strong>{order.transferReportedAt ? `買家回報末五碼 ${order.transferLastFive}` : "買家尚未透過網站回報末五碼"}</strong><p>{order.transferReportedAt ? `回報 ${formatPrice(order.transferAmount ?? order.total)}，請到網銀核對是否入帳。` : `如果你已在網銀確認收到 ${formatPrice(order.total)}，可直接更新，不必先切換其他狀態。`}</p></div>
+                <button type="button" disabled={busyOrder === order.id} onClick={() => void performAction(order, "mark_paid")}>{busyOrder === order.id ? "處理中…" : "款項已入帳，更新買家進度 →"}</button>
+              </section>}
               <div className="order-buyer-link"><span>買家進度頁</span>{order.accessToken ? <><a href={`/track/${order.accessToken}`} target="_blank" rel="noreferrer">開啟專屬訂單頁 ↗</a><button type="button" onClick={() => navigator.clipboard?.writeText(new URL(`/track/${order.accessToken}`, window.location.origin).toString())}>複製連結</button></> : <small>舊訂單尚未產生連結；買家可用訂單編號與 Email 查詢。</small>}</div>
               {order.transferReportedAt && <div className="order-transfer-report"><div><span>轉帳回報</span><strong>{formatPrice(order.transferAmount ?? order.total)}</strong></div><dl><div><dt>帳號末五碼</dt><dd>{order.transferLastFive}</dd></div><div><dt>轉帳日期</dt><dd>{order.transferDate}</dd></div><div><dt>回報時間</dt><dd>{new Date(order.transferReportedAt).toLocaleString("zh-TW", { timeZone: "Asia/Taipei" })}</dd></div></dl>{order.transferNote && <p>買家備註：{order.transferNote}</p>}</div>}
               <div className="order-print-heading"><div><span>列印製作</span><strong>從訂單直接前往拓竹</strong></div><p>按商品的「拓竹列印設定」，會開啟該作品的 MakerWorld 列印頁；再選擇列印設定，即可交給 Bambu Studio／Bambu Handy。</p></div>
@@ -157,7 +163,7 @@ export default function OrderManager({ initialOrders, initialEvents, emailConfig
               })}</ul>
               {order.note && <p className="order-note"><strong>備註：</strong>{order.note}</p>}
               <div className="order-workflow">
-                <div><span>下一步</span><div className="order-action-buttons">{actionsByStatus[status].filter((actionName) => (actionName !== "confirm_manual" || !emailConfigured) && actionName !== "mark_shipped").map((actionName) => {
+                <div><span>其他操作</span><div className="order-action-buttons">{actionsByStatus[status].filter((actionName) => (actionName !== "confirm_manual" || !emailConfigured) && actionName !== "mark_shipped" && actionName !== "mark_paid").map((actionName) => {
                   const action = orderActions[actionName];
                   const needsEmail = Boolean(action.sendsConfirmationEmail);
                   return <button className={actionName === "confirm" ? "primary" : actionName === "cancel" ? "danger" : ""} type="button" key={actionName} disabled={busyOrder === order.id || (needsEmail && !emailConfigured)} title={needsEmail && !emailConfigured ? "請先設定寄件服務" : undefined} onClick={() => performAction(order, actionName)}>{busyOrder === order.id ? "處理中…" : action.label}</button>;

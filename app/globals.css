@@ -344,6 +344,14 @@ footer small { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15);
 .order-record-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 22px 0; }
 .order-record-grid > div { display: grid; align-content: start; gap: 7px; }
 .order-record-grid p { margin: 0; color: #65625b; font-size: 12px; line-height: 1.65; }
+.payment-confirm-panel { display: grid; grid-template-columns: 1fr auto; gap: 22px; align-items: center; margin-bottom: 12px; padding: 18px; border: 2px solid var(--ink); background: var(--acid); }
+.payment-confirm-panel.reported { background: #ffcfaa; border-color: #c5642b; }
+.payment-confirm-panel > div { display: grid; gap: 5px; }
+.payment-confirm-panel span { font-size: 10px; font-weight: 800; letter-spacing: .1em; }
+.payment-confirm-panel strong { font-size: 18px; }
+.payment-confirm-panel p { margin: 0; color: #545348; font-size: 11px; line-height: 1.6; }
+.payment-confirm-panel button { min-width: 245px; border: 0; background: var(--ink); color: var(--acid); padding: 15px 18px; cursor: pointer; font-weight: 850; }
+.payment-confirm-panel button:disabled { cursor: wait; opacity: .55; }
 .order-buyer-link { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 13px 15px; background: #eeeae1; font-size: 11px; }
 .order-buyer-link > span { color: #77746c; letter-spacing: .08em; }
 .order-buyer-link a { margin-left: auto; border-bottom: 1px solid currentColor; font-weight: 750; }
@@ -577,6 +585,8 @@ footer small { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15);
   .order-workflow li time { display: block; min-width: 0; margin-bottom: 3px; }
   .shipment-admin-form > div { grid-template-columns: 1fr; }
   .order-transfer-report dl { grid-template-columns: 1fr; }
+  .payment-confirm-panel { grid-template-columns: 1fr; }
+  .payment-confirm-panel button { width: 100%; min-width: 0; }
   .order-buyer-link a { margin-left: 0; }
   .track-header, .track-lookup-shell > header { min-height: 66px; padding: 14px 5vw; }
   .track-header > div a { display: none; }

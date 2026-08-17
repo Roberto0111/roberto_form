@@ -60,7 +60,7 @@ export const orderActions: Record<OrderActionName, {
     to: "awaiting_transfer",
     sendsConfirmationEmail: true,
   },
-  mark_paid: { label: "確認已入帳", from: ["awaiting_transfer", "payment_review"], to: "paid" },
+  mark_paid: { label: "確認已入帳", from: ["pending_review", "awaiting_transfer", "payment_review"], to: "paid" },
   request_transfer_again: { label: "請買家重新回報", from: ["payment_review"], to: "awaiting_transfer" },
   start_production: { label: "開始製作", from: ["paid"], to: "producing" },
   mark_shipped: { label: "標記已出貨", from: ["producing"], to: "shipped" },

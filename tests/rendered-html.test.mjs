@@ -65,6 +65,7 @@ test("gives buyers a private order page, transfer report, and shipment tracking"
   assert.match(buyerPage, /前往官方物流查詢/);
   assert.match(manager, /確認出貨並公開物流資訊/);
   assert.match(manager, /開啟專屬訂單頁/);
+  assert.match(manager, /款項已入帳，更新買家進度/);
 });
 
 test("ships 97 unique products and the scheduled Reel batch", async () => {
