@@ -112,6 +112,13 @@
       "media_type": "reel",
       "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/16-travel-hygiene-kit-reel.mp4",
       "caption_file": "launch-grid/16-travel-hygiene-kit-caption.txt"
+    },
+    {
+      "id": "17-camp-chair-cup-holder",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/17-camp-chair-cup-holder-reel.mp4",
+      "caption_file": "launch-grid/17-camp-chair-cup-holder-caption.txt"
     }
   ]
 }
