@@ -78,6 +78,16 @@ test("offers a signed-in customer account filtered by verified email", async () 
   assert.match(page, /登入／我的訂單/);
 });
 
+test("keeps the full site navigation available on mobile", async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(page, /mobile-menu-trigger/);
+  assert.match(page, /手機版主要導覽/);
+  assert.match(page, /使用訂單編號查詢/);
+  assert.match(styles, /\.mobile-menu-panel/);
+  assert.match(styles, /\.mobile-menu-trigger/);
+});
+
 test("ships 97 unique products and the scheduled Reel batch", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const catalog = await readFile(new URL("../lib/catalog.ts", import.meta.url), "utf8");

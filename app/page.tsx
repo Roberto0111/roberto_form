@@ -49,6 +49,7 @@ export default function Home() {
   const [cartReady, setCartReady] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod>("cvs");
   const [submitting, setSubmitting] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
@@ -74,6 +75,20 @@ export default function Home() {
   useEffect(() => {
     if (cartReady) window.localStorage.setItem("robert-form-cart", JSON.stringify(cart));
   }, [cart, cartReady]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     const selectProductFromUrl = () => {
@@ -215,9 +230,27 @@ export default function Home() {
           <button className="cart-trigger" type="button" onClick={() => setCartOpen(true)} aria-label={`開啟購物車，目前 ${cartCount} 件商品`}>
             購物車 <strong>{cartCount}</strong>
           </button>
+          <button className="mobile-menu-trigger" type="button" aria-expanded={mobileMenuOpen} aria-controls="mobile-site-menu" onClick={() => setMobileMenuOpen(true)}><span aria-hidden="true">☰</span>選單</button>
           <a className="header-cta" href="#custom-order"><span aria-hidden="true" />訂製洽詢 ↘</a>
         </div>
       </header>
+
+      {mobileMenuOpen && <div className="mobile-menu-layer" role="dialog" aria-modal="true" aria-label="網站選單">
+        <button className="mobile-menu-backdrop" type="button" aria-label="關閉選單" onClick={() => setMobileMenuOpen(false)} />
+        <aside className="mobile-menu-panel" id="mobile-site-menu">
+          <div className="mobile-menu-head"><Link href="/" className="brand" onClick={() => setMobileMenuOpen(false)}><span className="brand-mark">RF</span><span>ROBERT <span className="brand-light">FORM</span></span></Link><button type="button" onClick={() => setMobileMenuOpen(false)} aria-label="關閉選單">×</button></div>
+          <nav aria-label="手機版主要導覽">
+            <a href="#catalog" onClick={() => setMobileMenuOpen(false)}><span>01</span><strong>選品目錄</strong><b>↘</b></a>
+            <a href="#pricing" onClick={() => setMobileMenuOpen(false)}><span>02</span><strong>定價方式</strong><b>↘</b></a>
+            <a href="#payment" onClick={() => setMobileMenuOpen(false)}><span>03</span><strong>付款配送</strong><b>↘</b></a>
+            <a href="#process" onClick={() => setMobileMenuOpen(false)}><span>04</span><strong>訂製流程</strong><b>↘</b></a>
+            <a href="#custom-order" onClick={() => setMobileMenuOpen(false)}><span>05</span><strong>訂製洽詢</strong><b>↘</b></a>
+            <a href="#about" onClick={() => setMobileMenuOpen(false)}><span>06</span><strong>關於作品</strong><b>↘</b></a>
+          </nav>
+          <div className="mobile-menu-account"><Link href="/account" onClick={() => setMobileMenuOpen(false)}>登入／我的訂單 →</Link><Link href="/track" onClick={() => setMobileMenuOpen(false)}>使用訂單編號查詢 →</Link></div>
+          <div className="mobile-menu-contact"><a href="https://www.instagram.com/radish_studio_/" target="_blank" rel="noreferrer">Instagram 私訊 ↗</a><a href="mailto:loxa8858@gmail.com">loxa8858@gmail.com</a></div>
+        </aside>
+      </div>}
 
       <section className="hero" id="top">
         <div className="hero-copy">
