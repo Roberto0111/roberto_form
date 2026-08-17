@@ -79,7 +79,7 @@ export default function OrderStatusView({ token, initialOrder }: { token: string
     <main className="track-shell">
       <header className="track-header">
         <Link href="/" className="brand"><span className="brand-mark">RF</span><span>ROBERT <span className="brand-light">FORM</span></span></Link>
-        <div><Link href="/track">查詢其他訂單</Link><button type="button" onClick={() => void refresh()} disabled={refreshing}>{refreshing ? "更新中…" : "重新整理進度"}</button></div>
+        <div><Link href="/account">我的訂單</Link><Link href="/track">查詢其他訂單</Link><button type="button" onClick={() => void refresh()} disabled={refreshing}>{refreshing ? "更新中…" : "重新整理進度"}</button></div>
       </header>
 
       <section className="track-hero">

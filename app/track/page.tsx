@@ -31,7 +31,7 @@ export default function TrackLookupPage() {
 
   return (
     <main className="track-lookup-shell">
-      <header><Link href="/" className="brand"><span className="brand-mark">RF</span><span>ROBERT <span className="brand-light">FORM</span></span></Link><Link href="/">返回商品目錄</Link></header>
+      <header><Link href="/" className="brand"><span className="brand-mark">RF</span><span>ROBERT <span className="brand-light">FORM</span></span></Link><div><Link href="/account">登入／我的訂單</Link><Link href="/">返回商品目錄</Link></div></header>
       <section>
         <div className="track-lookup-copy"><p className="eyebrow">ORDER LOOKUP</p><h1>查看你的<br />作品進度。</h1><p>輸入訂單編號與結帳時使用的 Email，即可安全返回專屬訂單頁。</p></div>
         <form onSubmit={lookup}>

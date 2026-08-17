@@ -68,6 +68,16 @@ test("gives buyers a private order page, transfer report, and shipment tracking"
   assert.match(manager, /款項已入帳，更新買家進度/);
 });
 
+test("offers a signed-in customer account filtered by verified email", async () => {
+  const account = await readFile(new URL("../app/account/page.tsx", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  assert.match(account, /requireChatGPTUser\("\/account"\)/);
+  assert.match(account, /eq\(orders\.email, user\.email\.toLowerCase\(\)\)/);
+  assert.match(account, /我的訂單/);
+  assert.match(account, /查看進度與訂單內容/);
+  assert.match(page, /登入／我的訂單/);
+});
+
 test("ships 97 unique products and the scheduled Reel batch", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const catalog = await readFile(new URL("../lib/catalog.ts", import.meta.url), "utf8");

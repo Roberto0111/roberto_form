@@ -211,6 +211,7 @@ export default function Home() {
           <Link href="/track">查詢訂單</Link>
         </nav>
         <div className="header-actions">
+          <Link className="account-trigger" href="/account">登入／我的訂單</Link>
           <button className="cart-trigger" type="button" onClick={() => setCartOpen(true)} aria-label={`開啟購物車，目前 ${cartCount} 件商品`}>
             購物車 <strong>{cartCount}</strong>
           </button>
@@ -532,6 +533,7 @@ export default function Home() {
         <div className="footer-links">
           <a href="https://www.instagram.com/radish_studio_/" target="_blank" rel="noreferrer">Instagram 私訊 ↗</a>
           <a href="mailto:loxa8858@gmail.com?subject=ROBERT%20FORM%20訂製洽詢">loxa8858@gmail.com ↗</a>
+          <Link href="/account">登入／我的訂單 ↗</Link>
           <Link href="/track">買家訂單查詢 ↗</Link>
           <a href="/orders">店家訂單管理 ↗</a>
         </div>
