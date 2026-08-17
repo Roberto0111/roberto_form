@@ -339,8 +339,16 @@ footer small { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15);
 .order-record-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 22px 0; }
 .order-record-grid > div { display: grid; align-content: start; gap: 7px; }
 .order-record-grid p { margin: 0; color: #65625b; font-size: 12px; line-height: 1.65; }
-.order-items { list-style: none; margin: 0; padding: 14px 0; border-top: 1px solid var(--line); }
-.order-items li { display: flex; justify-content: space-between; gap: 20px; padding: 5px 0; font-size: 12px; }
+.order-print-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; padding: 18px 0 12px; border-top: 1px solid var(--line); }
+.order-print-heading > div { display: grid; gap: 4px; }
+.order-print-heading span { color: #77746c; font-size: 10px; letter-spacing: .08em; }
+.order-print-heading p { max-width: 500px; margin: 0; color: #65625b; font-size: 11px; line-height: 1.55; }
+.order-items { list-style: none; margin: 0; padding: 0 0 14px; }
+.order-items li { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 11px 0; border-top: 1px solid var(--line); font-size: 12px; }
+.order-item-name { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.order-item-name small { color: #918e86; }
+.bambu-print-link { padding: 8px 11px; border-radius: 4px; background: #00ae42; color: white; font-size: 10px; font-weight: 800; letter-spacing: .02em; }
+.bambu-print-link:hover { background: #008f36; }
 .order-note { margin: 10px 0 0; padding: 13px; background: #eeeae1; font-size: 12px; }
 .order-workflow { display: grid; gap: 13px; margin-top: 16px; padding-top: 17px; border-top: 1px solid var(--line); }
 .order-workflow > div > span { display: block; margin-bottom: 9px; color: #77746c; font-size: 10px; letter-spacing: .08em; }
@@ -438,6 +446,7 @@ footer small { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15);
   .order-record-head { grid-template-columns: 1fr auto; }
   .order-record-head time { grid-column: 1 / -1; }
   .order-record-grid { grid-template-columns: 1fr; }
+  .order-print-heading { align-items: start; flex-direction: column; gap: 8px; }
   .orders-setup-warning { flex-direction: column; }
   .orders-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .order-workflow li time { display: block; min-width: 0; margin-bottom: 3px; }

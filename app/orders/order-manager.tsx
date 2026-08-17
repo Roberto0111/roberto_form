@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { formatPrice } from "@/lib/catalog";
+import { formatPrice, products } from "@/lib/catalog";
 import { orderActions, orderStatusLabels, orderStatuses, type OrderActionName, type OrderStatus } from "@/lib/order-workflow";
 
-type StoredItem = { name: string; quantity: number; unitPrice: number; lineTotal: number };
+type StoredItem = { productIndex?: number; name: string; englishName?: string; quantity: number; unitPrice: number; lineTotal: number };
 type AdminOrder = {
   id: string;
   createdAt: string;
@@ -125,7 +125,13 @@ export default function OrderManager({ initialOrders, initialEvents, emailConfig
                 <div><span>配送</span><strong>{order.shippingMethod === "cvs" ? "超商取貨" : "宅配"}</strong><p>{destination}</p></div>
                 <div><span>款項</span><strong>{formatPrice(order.total)}</strong><p>{paymentNote[status]}</p></div>
               </div>
-              <ul className="order-items">{items.map((item, index) => <li key={`${order.id}-${index}`}><span>{item.name} × {item.quantity}</span><strong>{formatPrice(item.lineTotal)}</strong></li>)}</ul>
+              <div className="order-print-heading"><div><span>列印製作</span><strong>從訂單直接前往拓竹</strong></div><p>按商品的「拓竹列印設定」，會開啟該作品的 MakerWorld 列印頁；再選擇列印設定，即可交給 Bambu Studio／Bambu Handy。</p></div>
+              <ul className="order-items">{items.map((item, index) => {
+                const product = Number.isInteger(item.productIndex) && products[item.productIndex!]
+                  ? products[item.productIndex!]
+                  : products.find((candidate) => candidate.name === item.englishName || candidate.zh === item.name);
+                return <li key={`${order.id}-${index}`}><div className="order-item-name"><span>{item.name} × {item.quantity}</span>{product ? <a className="bambu-print-link" href={product.source} target="_blank" rel="noreferrer" aria-label={`在拓竹開啟 ${item.name} 的列印設定`}>拓竹列印設定 ↗</a> : <small>這筆舊訂單沒有列印來源</small>}</div><strong>{formatPrice(item.lineTotal)}</strong></li>;
+              })}</ul>
               {order.note && <p className="order-note"><strong>備註：</strong>{order.note}</p>}
               <div className="order-workflow">
                 <div><span>下一步</span><div className="order-action-buttons">{actionsByStatus[status].filter((actionName) => actionName !== "confirm_manual" || !emailConfigured).map((actionName) => {

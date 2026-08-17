@@ -40,6 +40,8 @@ test("protects and supports the complete order workflow", async () => {
   assert.match(workflow, /開始製作/);
   assert.match(workflow, /標記已出貨/);
   assert.match(manager, /處理紀錄/);
+  assert.match(manager, /拓竹列印設定/);
+  assert.match(manager, /product\.source/);
   assert.match(adminRoute, /ORDER_ADMIN_EMAIL/);
   assert.match(adminRoute, /sendOrderConfirmationEmail/);
   assert.match(email, /Idempotency-Key/);
