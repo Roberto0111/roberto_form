@@ -255,7 +255,7 @@ export default function Home() {
       <section className="hero" id="top">
         <div className="hero-copy">
           <p className="eyebrow">3D PRINTED OBJECTS · CURATED DAILY</p>
-          <h1>把想像，<br />印成生活的形狀。</h1>
+          <h1 className="hero-title">把想像，<br />印成生活的形狀。</h1>
           <p className="hero-intro">
             從燈光、飾品到派對酒具，探索適合空間與日常的 3D 列印設計。
             選一個喜歡的方向，我們再一起調整顏色、尺寸與細節。
