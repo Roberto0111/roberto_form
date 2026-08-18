@@ -119,6 +119,13 @@
       "media_type": "reel",
       "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/17-camp-chair-cup-holder-reel.mp4",
       "caption_file": "launch-grid/17-camp-chair-cup-holder-caption.txt"
+    },
+    {
+      "id": "18-custom-letter-beads",
+      "enabled": true,
+      "media_type": "reel",
+      "source_url": "https://form24-maker-catalog.robertolopolun.chatgpt.site/social/instagram/18-custom-letter-beads-reel.mp4",
+      "caption_file": "launch-grid/18-custom-letter-beads-caption.txt"
     }
   ]
 }
