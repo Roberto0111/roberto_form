@@ -1,11 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #161616;
-  --paper: #f3f1eb;
-  --acid: #d9ff43;
-  --orange: #ff6433;
-  --line: rgba(22, 22, 22, 0.17);
+  --ink: #090a0b;
+  --paper: #101214;
+  --acid: #d8bd7a;
+  --orange: #c7603c;
+  --line: rgba(244, 239, 229, 0.16);
+  --text: #f4efe5;
+  --muted: #aaa49a;
+  --surface: #17191b;
+  --surface-raised: #202326;
+  --field: #111315;
 }
 
 * { box-sizing: border-box; }
@@ -13,7 +18,8 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   background: var(--paper);
-  color: var(--ink);
+  color: var(--text);
+  color-scheme: dark;
   font-family: var(--font-noto-sans-tc), "Noto Sans TC", sans-serif;
 }
 a { color: inherit; text-decoration: none; }
@@ -682,4 +688,160 @@ footer small { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15);
 @media (prefers-reduced-motion: reduce) {
   .header-cta > span { animation: none; }
   *, *::before, *::after { scroll-behavior: auto !important; }
+}
+
+/* ROBERT FORM dark gallery theme */
+::selection { background: var(--orange); color: var(--text); }
+
+.site-header {
+  background: rgba(12, 14, 15, .88);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, .18);
+}
+.brand-mark { background: var(--acid); color: var(--ink); }
+.account-trigger { border-color: var(--text); }
+.cart-trigger { background: var(--surface); color: var(--text); }
+.cart-trigger strong { background: var(--orange); color: var(--text); }
+.mobile-menu-trigger { background: var(--acid); color: var(--ink); }
+.mobile-menu-trigger span { color: var(--ink); }
+.mobile-menu-panel { background: #111315; }
+.mobile-menu-head > button { color: var(--text); }
+.mobile-menu-panel nav a > span { color: var(--muted); }
+.mobile-menu-account a { background: var(--surface-raised); color: var(--acid); }
+.mobile-menu-account a:last-child { background: var(--acid); color: var(--ink); }
+.mobile-menu-contact { color: var(--text); }
+
+.hero {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(199, 96, 60, .13), transparent 34%),
+    linear-gradient(180deg, #111315 0%, #0d0f10 100%);
+}
+.hero .eyebrow, .modal-heading .eyebrow, .checkout-title .eyebrow { color: var(--acid); }
+.hero-intro, .hero-stats span { color: var(--muted); }
+.primary-button, .orbit-label { color: var(--ink); }
+.hero-collage figure {
+  background: var(--surface-raised);
+  box-shadow: 0 24px 68px rgba(0, 0, 0, .48);
+}
+.hero-small { border-color: var(--paper); }
+.orbit-label { border-color: rgba(216, 189, 122, .66); }
+
+.catalog-section { background: #090b0c; }
+.section-heading > p, .empty { color: var(--muted); }
+.product-image { background: var(--surface-raised); border: 1px solid rgba(255, 255, 255, .08); }
+.product-image img { filter: brightness(.9) saturate(.92); }
+.product-card:hover img { filter: brightness(1) saturate(1.04); }
+.product-meta p, .product-meta div > span, .product-price small, .custom-badge { color: var(--muted); }
+.add-cart-button, .share-product-button { border-color: rgba(216, 189, 122, .44); }
+
+.modal-panel, .cart-panel, .checkout-panel { background: #131517; color: var(--text); }
+.modal-close, .checkout-close { background: var(--surface); color: var(--text); }
+.modal-heading > div > span,
+.modal-heading .custom-badge,
+.modal-price span,
+.modal-price small,
+.use-grid p,
+.estimate-panel > div span,
+.estimate-panel > p { color: var(--muted); }
+.modal-price strong { color: var(--text); }
+.modal-gallery figure { background: var(--surface-raised); }
+.estimate-panel { background: var(--surface-raised); }
+.modal-cta.share { border-color: var(--text); color: var(--text); }
+.modal-cta.email { background: var(--text); color: var(--ink); }
+
+.pricing-section { background: #111315; }
+.pricing-explainer > p { color: #c9c3b8; }
+.pricing-explainer li p, .pricing-explainer > small { color: var(--muted); }
+.payment-section, .order-contact { background: #0e1012; }
+.payment-grid article { background: var(--surface); }
+.payment-grid p, .order-contact-copy > p:last-child, .service-grid p { color: var(--muted); }
+.payment-card.active, .payment-card.pending, .delivery-card,
+.process, .about, .inquiry-brief { color: var(--ink); }
+.payment-card.pending { background: #2a2c2c; color: var(--text); }
+.payment-card.pending > span { color: var(--muted); }
+.payment-card.pending p { color: var(--muted); }
+.process { background: var(--acid); }
+.process li p { color: #3d3a32; }
+
+.cart-heading > button, .quantity-control button { color: var(--text); }
+.cart-line > div:nth-child(2) span, .cart-empty p, .cart-footer small,
+.checkout-title > p:last-child, .shipping-options small, .checkout-consent,
+.order-success > p:not(.eyebrow):not(.payment-reminder), .order-number span,
+.payment-reminder { color: var(--muted); }
+.cart-footer, .checkout-summary { background: var(--surface-raised); }
+.cart-footer > button, .submit-order { background: var(--acid); color: var(--ink); }
+.form-grid input, .form-grid select, .checkout-note textarea,
+.transfer-report-form input, .transfer-report-form textarea,
+.shipment-admin-form input, .shipment-admin-form select {
+  background: var(--field);
+  color: var(--text);
+}
+.form-grid input:focus, .form-grid select:focus, .checkout-note textarea:focus,
+.transfer-report-form input:focus, .transfer-report-form textarea:focus { border-color: var(--acid); }
+.checkout-form legend { border-color: var(--line); }
+.payment-choice.disabled { background: var(--surface-raised); color: var(--muted); }
+.radio-dot { background: var(--text); }
+.order-status-entry, .bank-details, .styling-placeholder,
+.shipping-options > label.selected, .payment-choice.selected { color: var(--ink); }
+.bank-details dt { color: #555045; }
+.bank-details button { background: var(--ink); color: var(--text); }
+
+.contact-card.email { background: var(--surface-raised); color: var(--text); }
+.about { background: var(--orange); }
+footer { background: #08090a; }
+.contact-dock { background: #111315; color: var(--text); box-shadow: 0 18px 52px rgba(0, 0, 0, .52); }
+.dock-action.cart { background: var(--text); color: var(--ink); }
+
+.orders-admin, .track-shell, .track-lookup-shell, .account-shell { background: #0e1012; }
+.orders-notice, .order-record, .track-notice,
+.track-timeline-card, .track-action-card, .track-order-details,
+.track-lookup-shell form, .account-identity, .account-order-list article {
+  background: var(--surface);
+  color: var(--text);
+}
+.orders-overview button { color: var(--text); }
+.orders-overview button.active { background: var(--acid); color: var(--ink); }
+.orders-overview button.active span { color: #4e493e; }
+.orders-overview span,
+.order-record-head span, .order-record-grid span, .order-record-head time,
+.order-record-grid p, .order-buyer-link > span, .order-buyer-link small,
+.order-print-heading span, .order-print-heading p, .order-item-name small,
+.order-workflow > div > span, .order-workflow li time, .orders-empty,
+.track-header > div span, .track-hero dt, .track-timeline time,
+.track-detail-grid li small, .track-detail-grid dt,
+.track-lookup-copy > p:last-child, .track-lookup-shell form small,
+.track-missing > section > p:not(.eyebrow), .account-header > div span,
+.account-identity span, .account-identity p, .account-order-main > div span,
+.account-order-main time, .account-empty p { color: var(--muted); }
+.order-buyer-link, .order-note, .order-workflow details { background: var(--surface-raised); }
+.order-buyer-link button,
+.order-action-buttons button, .order-action-buttons a,
+.shipment-actions button, .shipment-actions a { border-color: var(--text); color: var(--text); }
+.order-action-buttons button.primary, .shipment-actions a,
+.track-copy-button, .track-lookup-shell form button,
+.account-empty a:first-child { background: var(--acid); color: var(--ink); }
+.timeline-dot { background: var(--surface-raised); border-color: #55585a; }
+.track-timeline li.complete, .track-timeline li.current { color: var(--text); }
+.track-timeline li.complete .timeline-dot { background: var(--acid); color: var(--ink); border-color: var(--acid); }
+.track-action-card > p:not(.eyebrow) { color: var(--muted); }
+.track-action-card.waiting,
+.track-action-card.transfer-summary,
+.track-action-card.confirmed,
+.track-action-card.shipment,
+.track-cancelled,
+.payment-confirm-panel,
+.order-transfer-report { color: var(--ink); }
+.track-action-card.waiting > p:not(.eyebrow),
+.track-action-card.transfer-summary > p:not(.eyebrow),
+.track-action-card.confirmed > p:not(.eyebrow),
+.track-action-card.shipment > p:not(.eyebrow),
+.track-cancelled p { color: #575247; }
+.account-section-title > span { background: var(--acid); color: var(--ink); }
+.account-order-image span { background: var(--surface-raised); color: var(--acid); }
+.account-help { color: var(--ink); }
+.account-help > div:last-child a { color: var(--text); }
+
+button:focus-visible, a:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 3px;
 }
